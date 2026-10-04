@@ -138,7 +138,7 @@ $body
           <li><a href="/terms">Terms of Service</a></li>
           <li><a href="/privacy">Privacy Policy</a></li>
           <li><a href="/refund-policy">Refund &amp; Returns</a></li>
-          <li><a href="/shipping-policy">Shipping &amp; Delivery</a></li>
+          <li><a href="/shipping-policy">Digital Delivery</a></li>
           <li><a href="/cookie-policy">Cookie Policy</a></li>
           <li><a href="/accessibility">Accessibility</a></li>
         </ul>
@@ -282,7 +282,7 @@ $homeBody = @"
       </div>
       <ul class="hero-checks">
         <li>$($icon.check) Extra-large letters</li>
-        <li>$($icon.check) Solutions included</li>
+        <li>$($icon.check) Printable PDF by email</li>
         <li>$($icon.check) Books from $(Money $minPrice)</li>
       </ul>
     </div>
@@ -426,7 +426,7 @@ $homeBundles
     <ol class="steps">
       <li><span class="step-num">1</span><h3>Choose your book</h3><p>Browse by language or puzzle type, look inside, and pick a book or a bundle.</p></li>
       <li><span class="step-num">2</span><h3>Fill in a short form</h3><p>Just your name, email and phone number. No account needed.</p></li>
-      <li><span class="step-num">3</span><h3>We confirm by email</h3><p>We contact you to confirm your order and payment, and help with any question.</p></li>
+      <li><span class="step-num">3</span><h3>Get your PDF by email</h3><p>Once payment is confirmed, we email you your printable PDF, usually within 24 hours. Print and enjoy!</p></li>
     </ol>
   </div>
 </section>
@@ -448,6 +448,8 @@ $langTiles
       <details><summary>Is the website in English but the books in other languages?</summary><div><p>Yes. Each book page tells you the language of the puzzles. Today we publish books in <strong>Italian</strong> and <strong>French</strong>, and English and more languages are coming soon.</p></div></details>
       <details><summary>Are the solutions included?</summary><div><p>Yes, every book has a full solutions section at the back.</p></div></details>
       <details><summary>How do I order?</summary><div><p>Open any book or bundle and press <strong>Buy now</strong>. Fill in your name, email and phone number, and we'll contact you to confirm your order and payment. All prices are in US dollars.</p></div></details>
+      <details><summary>How will I receive my book?</summary><div><p>All our books are <strong>printable PDF files</strong>. Once your payment is confirmed, we email you the PDF, usually within 24 hours. You can print the whole book or just the pages you want, as many times as you like for your own household. They print on US Letter or A4 paper.</p></div></details>
+      <details><summary>Can I get a refund?</summary><div><p>Yes. We offer a <strong>30-day money-back guarantee</strong>: if a book is not right for you, email us within 30 days for a full refund. See our <a href="/refund-policy">Refund Policy</a>.</p></div></details>
       <details><summary>Do you offer discounts?</summary><div><p>Yes. Our <a href="/bundles">bundles</a> group 2 to 11 books at a lower price than buying them one by one.</p></div></details>
       <details><summary>Can I order for a care home, school or library?</summary><div><p>Of course. <a href="/contact">Contact us</a> with the books and quantities you need and we'll prepare an offer.</p></div></details>
     </div>
@@ -553,14 +555,14 @@ $(($inBundles | ForEach-Object { BundleCard $_ }) -join "`n")
         <p class="original" lang="$($b.lang)">$(Enc $b.title)</p>
         <p style="font-size:1.15rem">$(Enc $b.tagline)</p>
         <div class="buy-box">
-          <div class="price-block"><span class="price price-lg">$(Money $b.price)</span><span class="muted">USD</span></div>
+          <div class="price-block"><span class="price price-lg">$(Money $b.price)</span><span class="muted">USD &middot; printable PDF sent by email</span></div>
           <a class="btn btn-accent" href="$(Enc $order)">Buy now</a>
         </div>
         <ul class="facts">
           <li><b>Language</b>$(Enc $b.language)</li>
           <li><b>Puzzle type</b>$(Enc $b.type)</li>
           <li><b>Pages</b>$($b.pages)</li>
-          <li><b>Format</b>Large 8.5 x 11 in</li>
+          <li><b>Format</b>Printable PDF</li>
           <li><b>Print</b>$lvText</li>
         </ul>
         <h2>About this book</h2>
@@ -595,7 +597,7 @@ $related
 "@
   $ld = @{
     '@context' = 'https://schema.org'; '@type' = 'Book'; name = $b.title; alternateName = $b.english
-    inLanguage = $b.lang; numberOfPages = $b.pages; bookFormat = 'https://schema.org/Paperback'
+    inLanguage = $b.lang; numberOfPages = $b.pages; bookFormat = 'https://schema.org/EBook'
     image = "$site/assets/books/$($b.img)-cover.jpg"; description = $b.tagline; url = "$site/books/$($b.id)"
     publisher = @{ '@type' = 'Organization'; name = 'EasyEye Puzzles' }
     offers = @{ '@type' = 'Offer'; price = "$($b.price).00"; priceCurrency = 'USD'; availability = 'https://schema.org/InStock'; url = "$site/books/$($b.id)" }
@@ -619,7 +621,7 @@ $aboutBody = @"
       <li>Large print and high contrast on every page</li>
       <li>Three difficulty levels so everyone can progress</li>
       <li>Culture-rich themes that bring back memories and start conversations</li>
-      <li>Large 8.5 x 11 inch format that is easy to hold and write in</li>
+      <li>Printable PDF: print at full size, only the pages you want, as often as you like</li>
       <li>Full solutions included</li>
     </ul>
     <p><a class="btn btn-primary" href="/books">Explore our books</a></p>
@@ -657,7 +659,7 @@ $legalPages = @(
   @{ path = '/terms'; file = 'terms.html'; title = 'Terms of Service' },
   @{ path = '/privacy'; file = 'privacy.html'; title = 'Privacy Policy' },
   @{ path = '/refund-policy'; file = 'refund-policy.html'; title = 'Refund & Return Policy' },
-  @{ path = '/shipping-policy'; file = 'shipping-policy.html'; title = 'Shipping & Delivery Policy' },
+  @{ path = '/shipping-policy'; file = 'shipping-policy.html'; title = 'Digital Delivery Policy' },
   @{ path = '/cookie-policy'; file = 'cookie-policy.html'; title = 'Cookie Policy' },
   @{ path = '/accessibility'; file = 'accessibility.html'; title = 'Accessibility Statement' }
 )
@@ -691,8 +693,8 @@ LegalPage '/terms' 'Terms of Service' 'The terms that apply when you use the Eas
       <p>EasyEye Puzzles ("we", "us", "our") publishes large print puzzle and activity books. You can reach us at any time at <a href="mailto:$email">$email</a>.</p>
 
       <h2>2. Our products</h2>
-      <p>We sell puzzle and activity books (word searches, crosswords, memory games and activity books) in several languages, individually and in bundles. Each product page states the language of the puzzles, the number of pages and the format. Please check the language before ordering: the website is in English, but the puzzles in each book are written in the language shown on its page.</p>
-      <p>We make every effort to describe and display our products accurately. Cover images and sample pages are shown for illustration; colours may vary slightly depending on your screen and on printing.</p>
+      <p>We sell <strong>digital</strong> puzzle and activity books (word searches, crosswords, memory games and activity books) in several languages, individually and in bundles. Every book is delivered as a <strong>printable PDF file</strong> by email; we do not ship printed books. Each product page states the language of the puzzles and the number of pages. Please check the language before ordering: the website is in English, but the puzzles in each book are written in the language shown on its page.</p>
+      <p>To use our books you need a device that can open PDF files and, if you want to solve on paper, a printer. The PDFs are designed for US Letter (8.5 x 11 in) paper and also print well on A4. We make every effort to describe and display our products accurately; colours may vary slightly depending on your screen and printer.</p>
 
       <h2>3. Prices</h2>
       <p>All prices are shown in US dollars (USD). Prices may change at any time, but the price that applies to your order is the one shown when you submitted it. Bundle prices apply only when the whole bundle is purchased together. If a price was displayed by obvious mistake, we will contact you before processing the order and you may cancel it at no cost.</p>
@@ -701,22 +703,27 @@ LegalPage '/terms' 'Terms of Service' 'The terms that apply when you use the Eas
       <ol>
         <li>You choose a book or bundle and submit the checkout form with your name, email address and phone number.</li>
         <li>Submitting the form is an <strong>order request</strong>. It does not charge you and does not yet create a binding contract.</li>
-        <li>We contact you by email to confirm availability, the total amount, the delivery details and how to pay.</li>
-        <li>The contract is formed when we confirm your order and receive your payment.</li>
+        <li>We contact you by email to confirm the order, the total amount and how to pay.</li>
+        <li>The contract is formed when we confirm your order and receive your payment. We then email you your PDF file(s).</li>
       </ol>
-      <p>We may decline or cancel an order request, for example if a product is unavailable, if the information provided is incomplete or incorrect, or if we suspect fraud. If you have already paid for an order we cannot fulfil, we will refund you in full.</p>
+      <p>We may decline or cancel an order request, for example if the information provided is incomplete or incorrect, or if we suspect fraud. If you have already paid for an order we cannot fulfil, we will refund you in full.</p>
 
       <h2>5. Payment</h2>
       <p>Payment is made using the method we agree with you when confirming your order. Depending on availability, this may include card payments or cryptocurrency processed by third-party payment providers (for example Cryptomus). Payments are handled by these providers under their own terms, and we never receive or store your full card details. For cryptocurrency payments, the amount due is calculated at the exchange rate shown by the payment provider at the time of payment, and you are responsible for any network fees charged by your wallet.</p>
 
       <h2>6. Delivery</h2>
-      <p>Delivery methods, timeframes and costs are explained in our <a href="/shipping-policy">Shipping &amp; Delivery Policy</a> and confirmed with you by email before payment.</p>
+      <p>Your PDF file(s) are delivered by email to the address you gave at checkout, normally within 24 hours of payment. There are no shipping costs. Details are in our <a href="/shipping-policy">Digital Delivery Policy</a>.</p>
 
       <h2>7. Returns and refunds</h2>
       <p>Your rights to cancel, return or receive a refund are explained in our <a href="/refund-policy">Refund &amp; Return Policy</a>. Nothing in these Terms affects your statutory rights as a consumer.</p>
 
       <h2>8. Intellectual property</h2>
-      <p>All content on the Site and in our books, including puzzles, text, illustrations, layouts, logos and the EasyEye Puzzles name, is owned by us or our licensors and protected by copyright and other laws. When you buy a book, you may use it for your own personal, non-commercial use. You may photocopy pages for use within your own household, or within a single care home, classroom or activity group you run, but you may not resell, republish, share online or distribute our content, or any part of it, without our written permission.</p>
+      <p>All content on the Site and in our books, including puzzles, text, illustrations, layouts, logos and the EasyEye Puzzles name, is owned by us or our licensors and protected by copyright and other laws. When you buy a book, you receive a personal licence to use the PDF. You may:</p>
+      <ul>
+        <li>keep the file on your own devices and print as many copies as you like for use within your own household;</li>
+        <li>print copies for the residents, students or members of a single care home, classroom or activity group that you run.</li>
+      </ul>
+      <p>You may not resell, share, upload, email to others, republish or distribute the PDF file or printed copies, or any part of them, without our written permission.</p>
 
       <h2>9. Using the Site</h2>
       <p>You agree not to misuse the Site, including by submitting false orders, attempting to gain unauthorised access, interfering with its operation, or using automated tools to collect content.</p>
@@ -740,7 +747,7 @@ LegalPage '/privacy' 'Privacy Policy' 'How EasyEye Puzzles collects, uses and pr
       <h2>1. Information we collect</h2>
       <ul>
         <li><strong>Order details:</strong> when you submit the checkout form, we collect your full name, email address and phone number, together with the product you chose and its price.</li>
-        <li><strong>Delivery and payment details:</strong> if you go ahead with an order, we may ask for a delivery address. Payments are processed by third-party payment providers; we do not receive or store your full card details or wallet keys.</li>
+        <li><strong>Payment details:</strong> payments are processed by third-party payment providers; we do not receive or store your full card details or wallet keys. Because our books are delivered as PDF files by email, we never need your postal address.</li>
         <li><strong>Messages:</strong> if you email us, we receive your email address and the content of your message.</li>
         <li><strong>Technical information:</strong> with your order request, our form sends a general location hint taken from your browser's time zone and language, and the type of device and browser you use. Our hosting provider also processes standard technical data such as IP addresses to deliver the website securely.</li>
       </ul>
@@ -785,69 +792,58 @@ LegalPage '/privacy' 'Privacy Policy' 'How EasyEye Puzzles collects, uses and pr
       <p>We may update this Privacy Policy from time to time. The date at the top of this page shows when it was last changed.</p>
 "@
 
-LegalPage '/refund-policy' 'Refund & Return Policy' 'How cancellations, returns and refunds work for EasyEye Puzzles orders.' @"
-      <p>We want you to be happy with every EasyEye Puzzles book. This policy explains how cancellations, returns and refunds work. It does not affect your statutory rights as a consumer.</p>
+LegalPage '/refund-policy' 'Refund & Return Policy' 'Our 30-day money-back guarantee for EasyEye Puzzles digital books.' @"
+      <p>We want you to be happy with every EasyEye Puzzles book. Even though our books are digital PDF files, <strong>we accept returns</strong>: if a book is not right for you, you can ask for a refund under our <strong>30-day money-back guarantee</strong>. This policy does not affect your statutory rights as a consumer.</p>
 
       <h2>1. Cancelling before payment</h2>
-      <p>Submitting the checkout form is only an order request. You can cancel it at any time before you pay, free of charge, simply by replying to our confirmation email or writing to <a href="mailto:$email">$email</a>.</p>
+      <p>Submitting the checkout form is only an order request. You can cancel it at any time before you pay, free of charge, by replying to our confirmation email or writing to <a href="mailto:$email">$email</a>.</p>
 
-      <h2>2. Cancelling after payment</h2>
-      <p>If your order has not yet been shipped, you can cancel it and receive a full refund. Once it has been shipped, the return rules below apply.</p>
-
-      <h2>3. Returns: 30 days</h2>
-      <p>You can return printed books within <strong>30 days</strong> of receiving them for a refund, provided they are unused (no puzzles filled in) and in their original condition. To start a return:</p>
+      <h2>2. 30-day money-back guarantee</h2>
+      <p>You can request a full refund within <strong>30 days</strong> of receiving your PDF, for any reason, for example if the puzzles are too easy or too hard, or the book is not what you expected. To request a refund:</p>
       <ol>
-        <li>Email <a href="mailto:$email">$email</a> with your order number (for example EEP-261004-ABCD) and the books you want to return.</li>
-        <li>We reply with the return address and instructions.</li>
-        <li>Send the books back. Unless the return is due to our mistake, return shipping costs are paid by you.</li>
+        <li>Email <a href="mailto:$email">$email</a> within 30 days with your order number (for example EEP-261004-ABCD) and the book(s) you want to return. Telling us why is optional but helps us improve.</li>
+        <li>By requesting a refund, you agree to delete the PDF file(s) from your devices and not to keep, print or share further copies.</li>
+        <li>We confirm your refund by email.</li>
       </ol>
-      <p>For bundles, you can return the whole bundle. If you return only some of the books in a bundle, the refund is the bundle price minus the regular price of the books you keep.</p>
+      <p>There is nothing to post back, and no return shipping costs.</p>
 
-      <h2>4. Damaged, defective or wrong items</h2>
-      <p>If a book arrives damaged, has a printing defect, or is not the book you ordered, email us within 30 days of delivery with your order number and a photo of the problem. We will send a free replacement or give you a full refund, including any shipping costs, and you will not need to pay to return the item.</p>
+      <h2>3. Bundles</h2>
+      <p>You can return a whole bundle for a full refund. If you return only some of the books in a bundle, the refund is the bundle price minus the regular price of the books you keep (and never more than the bundle price you paid).</p>
 
-      <h2>5. Digital editions</h2>
-      <p>If we supply a book as a digital file (PDF), you agree that delivery starts as soon as the file is sent to you, and the right to cancel ends once you have downloaded it. If a file is faulty or cannot be opened and we cannot fix the problem, we will refund you.</p>
+      <h2>4. Faulty or wrong files</h2>
+      <p>If your PDF does not open, is incomplete, or is not the book you ordered, email us. We will send you the correct file straight away. If we cannot fix the problem, we will give you a full refund, even after 30 days.</p>
 
-      <h2>6. How refunds are paid</h2>
-      <p>Approved refunds are issued within <strong>14 days</strong> of our receiving the returned items (or of approving the refund when no return is needed). We refund using the original payment method where possible. For cryptocurrency payments, refunds are made in the same cryptocurrency to a wallet address you provide, for the US dollar amount you paid, unless we agree otherwise; network fees may apply.</p>
+      <h2>5. How refunds are paid</h2>
+      <p>Approved refunds are issued within <strong>14 days</strong> of your request. We refund using the original payment method where possible. For cryptocurrency payments, refunds are made in the same cryptocurrency to a wallet address you provide, for the US dollar amount you paid, unless we agree otherwise; network fees may apply.</p>
 
-      <h2>7. EU, UK and other consumer rights</h2>
-      <p>If you live in the European Union or the United Kingdom, you also have a legal right to withdraw from a distance purchase within 14 days of receiving your goods without giving a reason. Our 30-day return window includes and extends this right.</p>
+      <h2>6. Fair use</h2>
+      <p>The money-back guarantee is meant for genuine customers. We may refuse repeated refund requests from the same person when it appears that the guarantee is being used to obtain books for free.</p>
 "@
 
-LegalPage '/shipping-policy' 'Shipping & Delivery Policy' 'How EasyEye Puzzles books are delivered, delivery times and costs.' @"
-      <p>This policy explains how we deliver your EasyEye Puzzles books. Exact delivery options, costs and timeframes for your address are confirmed with you by email before you pay.</p>
+LegalPage '/shipping-policy' 'Digital Delivery Policy' 'How EasyEye Puzzles PDF books are delivered by email, worldwide and with no shipping costs.' @"
+      <p>All EasyEye Puzzles books are <strong>digital products</strong>. We do not ship printed books: each book is delivered as a printable PDF file by email.</p>
 
-      <h2>1. Where we deliver</h2>
-      <p>We ship worldwide, including the United States, Canada, the United Kingdom, Italy, France and the rest of Europe. If we cannot deliver to your address, we will tell you before you pay.</p>
+      <h2>1. How you receive your book</h2>
+      <ol>
+        <li>You submit the checkout form for the book or bundle you want.</li>
+        <li>We email you to confirm your order and how to pay.</li>
+        <li>As soon as your payment is confirmed, we email you your PDF file(s), either as an attachment or as a secure download link.</li>
+      </ol>
 
-      <h2>2. Processing time</h2>
-      <p>Orders are processed and prepared for dispatch within <strong>2 to 5 business days</strong> after payment is confirmed.</p>
+      <h2>2. Delivery time</h2>
+      <p>PDFs are normally sent within <strong>24 hours</strong> of payment confirmation, and often much sooner. If you have not received your files within 24 hours, please check your spam or junk folder, then contact us at <a href="mailto:$email">$email</a>.</p>
 
-      <h2>3. Delivery times</h2>
-      <p>Typical delivery times after dispatch are:</p>
-      <ul>
-        <li>United States and Canada: 5 to 10 business days</li>
-        <li>United Kingdom and European Union: 5 to 12 business days</li>
-        <li>Rest of the world: 10 to 20 business days</li>
-      </ul>
-      <p>These are estimates. Delays can happen, for example during holidays or because of customs checks.</p>
+      <h2>3. Where we deliver</h2>
+      <p>Because delivery is by email, we deliver <strong>worldwide</strong>, with no shipping costs, no customs duties and no waiting for the post.</p>
 
-      <h2>4. Shipping costs</h2>
-      <p>Shipping costs depend on your address and the number of books, and are confirmed by email before payment, together with the total amount.</p>
+      <h2>4. Download links</h2>
+      <p>If we send you a download link, please download and save your files promptly. Links may expire after some time for security; if yours has expired, just ask and we will send you a new one free of charge.</p>
 
-      <h2>5. Tracking</h2>
-      <p>When your order ships, we email you the tracking details whenever the delivery method includes tracking.</p>
+      <h2>5. Printing your book</h2>
+      <p>Our PDFs are designed for US Letter (8.5 x 11 in) paper and also print well on A4 using your printer's "fit to page" option. You can print the whole book or only the pages you want, as many times as you like for use in your own household, as described in our <a href="/terms">Terms of Service</a>. For the most comfortable reading, print in black and white on plain matte paper.</p>
 
-      <h2>6. Customs, duties and taxes</h2>
-      <p>Orders shipped across borders may be subject to import duties or taxes charged by the destination country. Unless we tell you otherwise when confirming your order, these charges are paid by the recipient.</p>
-
-      <h2>7. Address and delivery problems</h2>
-      <p>Please check that your delivery address is complete and correct. If a parcel is returned to us because of an incorrect or incomplete address, we can resend it once the additional shipping cost is paid. If your parcel has not arrived within the estimated time, contact us and we will help you track it down. Damaged or lost parcels are covered by our <a href="/refund-policy">Refund &amp; Return Policy</a>.</p>
-
-      <h2>8. Digital delivery</h2>
-      <p>If you order a digital edition, we send you the file or download link by email after payment is confirmed, normally within 1 business day.</p>
+      <h2>6. Wrong email address</h2>
+      <p>Please make sure the email address you enter at checkout is correct. If you made a mistake, contact us and we will resend your files to the right address once we have confirmed the order is yours.</p>
 "@
 
 LegalPage '/cookie-policy' 'Cookie Policy' 'Which cookies and similar technologies the EasyEye Puzzles website uses.' @"
@@ -957,14 +953,14 @@ function CheckoutPage([string]$id, [string]$name, [string]$subtitle, $price, [st
       <div class="hp" aria-hidden="true"><label for="website">Leave this empty</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
       <p id="form-error" class="form-error" role="alert" tabindex="-1" hidden></p>
       <button class="btn btn-accent checkout-submit" type="submit">Submit order &middot; $(Money $price)</button>
-      <p class="checkout-note">We will contact you by email to confirm your order and payment. By submitting, you agree to our <a href="/terms" target="_blank">Terms</a>, <a href="/refund-policy" target="_blank">Refund Policy</a> and <a href="/privacy" target="_blank">Privacy Policy</a>.</p>
+      <p class="checkout-note">This is a digital book: you will receive a printable PDF by email. We will contact you to confirm your order and payment. By submitting, you agree to our <a href="/terms" target="_blank">Terms</a>, <a href="/refund-policy" target="_blank">Refund Policy</a> and <a href="/privacy" target="_blank">Privacy Policy</a>.</p>
     </form>
 
     <div id="order-done" class="order-done" tabindex="-1" hidden>
       <div class="done-icon" aria-hidden="true">&#10003;</div>
       <h2>Thank you, your order is received!</h2>
       <p>Order number: <strong id="done-id"></strong></p>
-      <p>We will contact you at <strong id="done-email"></strong> to confirm your order and payment.</p>
+      <p>We will contact you at <strong id="done-email"></strong> to confirm your order and payment, then email you your PDF.</p>
       <a class="btn btn-primary" href="/">Back to EasyEye Puzzles</a>
     </div>
   </div>
