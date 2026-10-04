@@ -22,11 +22,16 @@ function WriteFile([string]$rel, [string]$content) {
   [IO.File]::WriteAllText($path, $content, $utf8)
 }
 
+$usStars = ''; for ($j = 0; $j -lt 5; $j++) { for ($i = 0; $i -lt 6; $i++) { $usStars += "<circle cx=""$(1.3 + 2.5 * $i)"" cy=""$(1.1 + 2.1 * $j)"" r="".45""/>" } }
+$flagIT = '<svg viewBox="0 0 3 2" preserveAspectRatio="none"><rect width="1" height="2" fill="#009246"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#ce2b37"/></svg>'
+$flagFR = '<svg viewBox="0 0 3 2" preserveAspectRatio="none"><rect width="1" height="2" fill="#0055a4"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#ef4135"/></svg>'
+$flagUS = '<svg viewBox="0 0 38 20" preserveAspectRatio="none"><rect width="38" height="20" fill="#b22234"/><path d="M0 2.31h38M0 5.38h38M0 8.46h38M0 11.54h38M0 14.62h38M0 17.69h38" stroke="#fff" stroke-width="1.54"/><rect width="15.2" height="10.77" fill="#3c3b6e"/><g fill="#fff">' + $usStars + '</g></svg>'
+$flagMore = '<svg viewBox="0 0 30 20" preserveAspectRatio="none"><rect width="30" height="20" fill="#ffc83d"/><g fill="none" stroke="#1d3a8a" stroke-width="1.6"><circle cx="15" cy="10" r="6.5"/><path d="M8.5 10h13M15 3.5c-3.5 3.6-3.5 9.4 0 13M15 3.5c3.5 3.6 3.5 9.4 0 13"/></g></svg>'
 $languages = @(
-  @{ code = 'it'; name = 'Italian';  flag = '<i style="background:#009246"></i><i style="background:#fff"></i><i style="background:#ce2b37"></i>' },
-  @{ code = 'fr'; name = 'French';   flag = '<i style="background:#0055a4"></i><i style="background:#fff"></i><i style="background:#ef4135"></i>' },
-  @{ code = 'en'; name = 'English';  flag = '<i style="background:#012169"></i><i style="background:#fff"></i><i style="background:#c8102e"></i>' },
-  @{ code = 'more'; name = 'More languages'; flag = '<i style="background:#ffc83d"></i><i style="background:#1d3a8a"></i><i style="background:#ffc83d"></i>' }
+  @{ code = 'it'; name = 'Italian'; flag = $flagIT },
+  @{ code = 'fr'; name = 'French'; flag = $flagFR },
+  @{ code = 'en'; name = 'English'; flag = $flagUS },
+  @{ code = 'more'; name = 'More languages'; flag = $flagMore }
 )
 $types = @('Word Search', 'Crossword', 'Memory Games', 'Activity Book')
 function TypeSlug([string]$t) { $t.ToLower().Replace(' ', '-') }
@@ -125,7 +130,17 @@ $body
           <li><a href="/about">About us</a></li>
           <li><a href="/contact">Contact</a></li>
           <li>Sales &amp; help: <a href="mailto:$email">$email</a></li>
-          <li><a href="/privacy">Privacy</a></li>
+        </ul>
+      </div>
+      <div>
+          <h3>Legal</h3>
+        <ul>
+          <li><a href="/terms">Terms of Service</a></li>
+          <li><a href="/privacy">Privacy Policy</a></li>
+          <li><a href="/refund-policy">Refund &amp; Returns</a></li>
+          <li><a href="/shipping-policy">Shipping &amp; Delivery</a></li>
+          <li><a href="/cookie-policy">Cookie Policy</a></li>
+          <li><a href="/accessibility">Accessibility</a></li>
         </ul>
       </div>
     </div>
@@ -636,24 +651,252 @@ $contactBody = @"
 "@
 WriteFile 'contact.html' (Layout 'Contact' 'Contact EasyEye Puzzles about our large print puzzle books, orders, bulk orders, or to request a new language.' '/contact' 'contact' $contactBody)
 
-# ---------- Privacy ----------
-$privacyBody = @"
+# ---------- Legal pages ----------
+$legalUpdated = 'October 4, 2026'
+$legalPages = @(
+  @{ path = '/terms'; file = 'terms.html'; title = 'Terms of Service' },
+  @{ path = '/privacy'; file = 'privacy.html'; title = 'Privacy Policy' },
+  @{ path = '/refund-policy'; file = 'refund-policy.html'; title = 'Refund & Return Policy' },
+  @{ path = '/shipping-policy'; file = 'shipping-policy.html'; title = 'Shipping & Delivery Policy' },
+  @{ path = '/cookie-policy'; file = 'cookie-policy.html'; title = 'Cookie Policy' },
+  @{ path = '/accessibility'; file = 'accessibility.html'; title = 'Accessibility Statement' }
+)
+
+function LegalPage([string]$path, [string]$title, [string]$desc, [string]$content) {
+  $page = $legalPages | Where-Object { $_.path -eq $path }
+  $side = ($legalPages | ForEach-Object {
+    $cur = if ($_.path -eq $path) { ' aria-current="page"' } else { '' }
+    "<li><a href=""$($_.path)""$cur>$($_.title)</a></li>"
+  }) -join ''
+  $body = @"
 <section>
-  <div class="container prose">
-    <h1>Privacy policy</h1>
-    <p>This website does not use advertising or tracking cookies and does not ask you to create an account.</p>
-    <h2>Preferences</h2>
-    <p>If you change the text size or turn on night mode, that choice is saved only in your own browser (local storage) so the site remembers it on your next visit. It is never sent to us.</p>
-    <h2>Orders</h2>
-    <p>When you place an order, we use the details you give us (such as your name, email and shipping address) only to process and deliver your order and to answer your questions. Payments are handled by our payment provider, and we never see or store your card details.</p>
-    <h2>Fonts and hosting</h2>
-    <p>The site is hosted on Cloudflare and uses Google Fonts to display the Atkinson Hyperlegible typeface. These providers may process technical data such as your IP address to deliver the pages.</p>
-    <h2>Contact</h2>
-    <p>For any privacy question, email <a href="mailto:$email">$email</a>.</p>
+  <div class="container legal">
+    <aside class="legal-nav" aria-label="Legal pages"><h2>Legal</h2><ul>$side</ul></aside>
+    <article class="prose legal-body">
+      <h1>$title</h1>
+      <p class="legal-updated">Last updated: $legalUpdated</p>
+$content
+      <div class="legal-contact"><h2>Questions?</h2><p>Contact us at <a href="mailto:$email">$email</a>. We usually reply within 1 to 2 business days.</p></div>
+    </article>
   </div>
 </section>
 "@
-WriteFile 'privacy.html' (Layout 'Privacy Policy' 'Privacy policy for EasyEye Puzzles.' '/privacy' '' $privacyBody)
+  WriteFile $page.file (Layout $title $desc $path '' $body)
+}
+
+LegalPage '/terms' 'Terms of Service' 'The terms that apply when you use the EasyEye Puzzles website and order our books.' @"
+      <p>Welcome to EasyEye Puzzles. These Terms of Service ("Terms") apply to your use of <a href="/">easyeyepuzzles.com</a> (the "Site") and to any order you place with us. By using the Site or placing an order, you agree to these Terms. If you do not agree, please do not use the Site.</p>
+
+      <h2>1. Who we are</h2>
+      <p>EasyEye Puzzles ("we", "us", "our") publishes large print puzzle and activity books. You can reach us at any time at <a href="mailto:$email">$email</a>.</p>
+
+      <h2>2. Our products</h2>
+      <p>We sell puzzle and activity books (word searches, crosswords, memory games and activity books) in several languages, individually and in bundles. Each product page states the language of the puzzles, the number of pages and the format. Please check the language before ordering: the website is in English, but the puzzles in each book are written in the language shown on its page.</p>
+      <p>We make every effort to describe and display our products accurately. Cover images and sample pages are shown for illustration; colours may vary slightly depending on your screen and on printing.</p>
+
+      <h2>3. Prices</h2>
+      <p>All prices are shown in US dollars (USD). Prices may change at any time, but the price that applies to your order is the one shown when you submitted it. Bundle prices apply only when the whole bundle is purchased together. If a price was displayed by obvious mistake, we will contact you before processing the order and you may cancel it at no cost.</p>
+
+      <h2>4. How orders work</h2>
+      <ol>
+        <li>You choose a book or bundle and submit the checkout form with your name, email address and phone number.</li>
+        <li>Submitting the form is an <strong>order request</strong>. It does not charge you and does not yet create a binding contract.</li>
+        <li>We contact you by email to confirm availability, the total amount, the delivery details and how to pay.</li>
+        <li>The contract is formed when we confirm your order and receive your payment.</li>
+      </ol>
+      <p>We may decline or cancel an order request, for example if a product is unavailable, if the information provided is incomplete or incorrect, or if we suspect fraud. If you have already paid for an order we cannot fulfil, we will refund you in full.</p>
+
+      <h2>5. Payment</h2>
+      <p>Payment is made using the method we agree with you when confirming your order. Depending on availability, this may include card payments or cryptocurrency processed by third-party payment providers (for example Cryptomus). Payments are handled by these providers under their own terms, and we never receive or store your full card details. For cryptocurrency payments, the amount due is calculated at the exchange rate shown by the payment provider at the time of payment, and you are responsible for any network fees charged by your wallet.</p>
+
+      <h2>6. Delivery</h2>
+      <p>Delivery methods, timeframes and costs are explained in our <a href="/shipping-policy">Shipping &amp; Delivery Policy</a> and confirmed with you by email before payment.</p>
+
+      <h2>7. Returns and refunds</h2>
+      <p>Your rights to cancel, return or receive a refund are explained in our <a href="/refund-policy">Refund &amp; Return Policy</a>. Nothing in these Terms affects your statutory rights as a consumer.</p>
+
+      <h2>8. Intellectual property</h2>
+      <p>All content on the Site and in our books, including puzzles, text, illustrations, layouts, logos and the EasyEye Puzzles name, is owned by us or our licensors and protected by copyright and other laws. When you buy a book, you may use it for your own personal, non-commercial use. You may photocopy pages for use within your own household, or within a single care home, classroom or activity group you run, but you may not resell, republish, share online or distribute our content, or any part of it, without our written permission.</p>
+
+      <h2>9. Using the Site</h2>
+      <p>You agree not to misuse the Site, including by submitting false orders, attempting to gain unauthorised access, interfering with its operation, or using automated tools to collect content.</p>
+
+      <h2>10. Health notice</h2>
+      <p>Our books are intended for entertainment and gentle mental exercise. They are not medical devices and are not a substitute for professional medical advice, diagnosis or treatment, including for visual or cognitive conditions.</p>
+
+      <h2>11. Limitation of liability</h2>
+      <p>To the extent permitted by law, we are not liable for indirect or consequential losses, or for losses that were not foreseeable when you placed your order. Our total liability for any order is limited to the amount you paid for that order. Nothing in these Terms limits liability that cannot be limited by law.</p>
+
+      <h2>12. Changes to these Terms</h2>
+      <p>We may update these Terms from time to time. The version published on this page when you place an order applies to that order.</p>
+
+      <h2>13. Contact</h2>
+      <p>For any question about these Terms, email <a href="mailto:$email">$email</a>.</p>
+"@
+
+LegalPage '/privacy' 'Privacy Policy' 'How EasyEye Puzzles collects, uses and protects your personal information.' @"
+      <p>This Privacy Policy explains what personal information EasyEye Puzzles ("we", "us") collects when you use <a href="/">easyeyepuzzles.com</a> or place an order, how we use it, and the choices you have. We keep the information we collect to a minimum.</p>
+
+      <h2>1. Information we collect</h2>
+      <ul>
+        <li><strong>Order details:</strong> when you submit the checkout form, we collect your full name, email address and phone number, together with the product you chose and its price.</li>
+        <li><strong>Delivery and payment details:</strong> if you go ahead with an order, we may ask for a delivery address. Payments are processed by third-party payment providers; we do not receive or store your full card details or wallet keys.</li>
+        <li><strong>Messages:</strong> if you email us, we receive your email address and the content of your message.</li>
+        <li><strong>Technical information:</strong> with your order request, our form sends a general location hint taken from your browser's time zone and language, and the type of device and browser you use. Our hosting provider also processes standard technical data such as IP addresses to deliver the website securely.</li>
+      </ul>
+      <p>We do not use advertising trackers, we do not sell your personal information, and you do not need an account to shop with us.</p>
+
+      <h2>2. How we use your information</h2>
+      <ul>
+        <li>To process, confirm and deliver your order, and to arrange payment.</li>
+        <li>To contact you about your order and answer your questions.</li>
+        <li>To prevent fraud and keep our website secure.</li>
+        <li>To meet our legal, tax and accounting obligations.</li>
+      </ul>
+      <p>Where the GDPR or similar laws apply, our legal bases are: performance of a contract (processing your order), our legitimate interests (security and customer service), and legal obligations (record keeping). We will only send you marketing emails if you ask us to.</p>
+
+      <h2>3. Service providers we use</h2>
+      <ul>
+        <li><strong>EmailJS</strong>: delivers the order request you submit at checkout to our mailbox.</li>
+        <li><strong>Zoho Mail</strong>: hosts our email inbox, where we receive and answer messages.</li>
+        <li><strong>Cloudflare</strong>: hosts the website and protects it against attacks.</li>
+        <li><strong>Google Fonts</strong>: displays the Atkinson Hyperlegible typeface used for easy reading.</li>
+        <li><strong>Payment providers</strong> (for example Cryptomus): process payments when you pay for an order.</li>
+      </ul>
+      <p>These providers only process your information to provide their services to us. Some of them may process data outside your country; where required, they use appropriate safeguards such as standard contractual clauses.</p>
+
+      <h2>4. How long we keep your information</h2>
+      <p>We keep order information for as long as needed to fulfil your order and provide support, and afterwards for the period required by tax and accounting laws (typically up to 10 years for invoices). Order requests that do not lead to a purchase are deleted within 12 months.</p>
+
+      <h2>5. Your rights</h2>
+      <p>Depending on where you live, you may have the right to access, correct, delete or receive a copy of your personal information, to object to or restrict certain processing, and to withdraw consent. Residents of California and other US states have rights to know, delete and correct personal information, and the right not to be discriminated against for exercising these rights. We do not sell or share personal information for targeted advertising.</p>
+      <p>To exercise any of these rights, email <a href="mailto:$email">$email</a>. You also have the right to complain to your local data protection authority.</p>
+
+      <h2>6. Cookies and local storage</h2>
+      <p>We do not use advertising or analytics cookies. If you change the text size or turn on night mode, that choice is saved only in your own browser. See our <a href="/cookie-policy">Cookie Policy</a> for details.</p>
+
+      <h2>7. Security</h2>
+      <p>The website is served only over encrypted HTTPS connections, and we limit access to your information to what is needed to handle your order. No method of transmission over the internet is completely secure, but we work to protect your information.</p>
+
+      <h2>8. Children</h2>
+      <p>Our website is intended for adults. We do not knowingly collect personal information from children under 16. If you believe a child has sent us information, contact us and we will delete it.</p>
+
+      <h2>9. Changes to this policy</h2>
+      <p>We may update this Privacy Policy from time to time. The date at the top of this page shows when it was last changed.</p>
+"@
+
+LegalPage '/refund-policy' 'Refund & Return Policy' 'How cancellations, returns and refunds work for EasyEye Puzzles orders.' @"
+      <p>We want you to be happy with every EasyEye Puzzles book. This policy explains how cancellations, returns and refunds work. It does not affect your statutory rights as a consumer.</p>
+
+      <h2>1. Cancelling before payment</h2>
+      <p>Submitting the checkout form is only an order request. You can cancel it at any time before you pay, free of charge, simply by replying to our confirmation email or writing to <a href="mailto:$email">$email</a>.</p>
+
+      <h2>2. Cancelling after payment</h2>
+      <p>If your order has not yet been shipped, you can cancel it and receive a full refund. Once it has been shipped, the return rules below apply.</p>
+
+      <h2>3. Returns: 30 days</h2>
+      <p>You can return printed books within <strong>30 days</strong> of receiving them for a refund, provided they are unused (no puzzles filled in) and in their original condition. To start a return:</p>
+      <ol>
+        <li>Email <a href="mailto:$email">$email</a> with your order number (for example EEP-261004-ABCD) and the books you want to return.</li>
+        <li>We reply with the return address and instructions.</li>
+        <li>Send the books back. Unless the return is due to our mistake, return shipping costs are paid by you.</li>
+      </ol>
+      <p>For bundles, you can return the whole bundle. If you return only some of the books in a bundle, the refund is the bundle price minus the regular price of the books you keep.</p>
+
+      <h2>4. Damaged, defective or wrong items</h2>
+      <p>If a book arrives damaged, has a printing defect, or is not the book you ordered, email us within 30 days of delivery with your order number and a photo of the problem. We will send a free replacement or give you a full refund, including any shipping costs, and you will not need to pay to return the item.</p>
+
+      <h2>5. Digital editions</h2>
+      <p>If we supply a book as a digital file (PDF), you agree that delivery starts as soon as the file is sent to you, and the right to cancel ends once you have downloaded it. If a file is faulty or cannot be opened and we cannot fix the problem, we will refund you.</p>
+
+      <h2>6. How refunds are paid</h2>
+      <p>Approved refunds are issued within <strong>14 days</strong> of our receiving the returned items (or of approving the refund when no return is needed). We refund using the original payment method where possible. For cryptocurrency payments, refunds are made in the same cryptocurrency to a wallet address you provide, for the US dollar amount you paid, unless we agree otherwise; network fees may apply.</p>
+
+      <h2>7. EU, UK and other consumer rights</h2>
+      <p>If you live in the European Union or the United Kingdom, you also have a legal right to withdraw from a distance purchase within 14 days of receiving your goods without giving a reason. Our 30-day return window includes and extends this right.</p>
+"@
+
+LegalPage '/shipping-policy' 'Shipping & Delivery Policy' 'How EasyEye Puzzles books are delivered, delivery times and costs.' @"
+      <p>This policy explains how we deliver your EasyEye Puzzles books. Exact delivery options, costs and timeframes for your address are confirmed with you by email before you pay.</p>
+
+      <h2>1. Where we deliver</h2>
+      <p>We ship worldwide, including the United States, Canada, the United Kingdom, Italy, France and the rest of Europe. If we cannot deliver to your address, we will tell you before you pay.</p>
+
+      <h2>2. Processing time</h2>
+      <p>Orders are processed and prepared for dispatch within <strong>2 to 5 business days</strong> after payment is confirmed.</p>
+
+      <h2>3. Delivery times</h2>
+      <p>Typical delivery times after dispatch are:</p>
+      <ul>
+        <li>United States and Canada: 5 to 10 business days</li>
+        <li>United Kingdom and European Union: 5 to 12 business days</li>
+        <li>Rest of the world: 10 to 20 business days</li>
+      </ul>
+      <p>These are estimates. Delays can happen, for example during holidays or because of customs checks.</p>
+
+      <h2>4. Shipping costs</h2>
+      <p>Shipping costs depend on your address and the number of books, and are confirmed by email before payment, together with the total amount.</p>
+
+      <h2>5. Tracking</h2>
+      <p>When your order ships, we email you the tracking details whenever the delivery method includes tracking.</p>
+
+      <h2>6. Customs, duties and taxes</h2>
+      <p>Orders shipped across borders may be subject to import duties or taxes charged by the destination country. Unless we tell you otherwise when confirming your order, these charges are paid by the recipient.</p>
+
+      <h2>7. Address and delivery problems</h2>
+      <p>Please check that your delivery address is complete and correct. If a parcel is returned to us because of an incorrect or incomplete address, we can resend it once the additional shipping cost is paid. If your parcel has not arrived within the estimated time, contact us and we will help you track it down. Damaged or lost parcels are covered by our <a href="/refund-policy">Refund &amp; Return Policy</a>.</p>
+
+      <h2>8. Digital delivery</h2>
+      <p>If you order a digital edition, we send you the file or download link by email after payment is confirmed, normally within 1 business day.</p>
+"@
+
+LegalPage '/cookie-policy' 'Cookie Policy' 'Which cookies and similar technologies the EasyEye Puzzles website uses.' @"
+      <p>This Cookie Policy explains how <a href="/">easyeyepuzzles.com</a> uses cookies and similar technologies. In short: <strong>we do not use advertising or analytics cookies.</strong></p>
+
+      <h2>1. What cookies and local storage are</h2>
+      <p>Cookies and browser local storage are small pieces of data saved by your browser. They can remember settings or help websites run securely.</p>
+
+      <h2>2. What we use</h2>
+      <table class="legal-table">
+        <thead><tr><th>Name</th><th>Type</th><th>Purpose</th><th>Duration</th></tr></thead>
+        <tbody>
+          <tr><td>eep-size</td><td>Local storage</td><td>Remembers the text size you choose (A, A+, A++)</td><td>Until you clear it</td></tr>
+          <tr><td>eep-theme</td><td>Local storage</td><td>Remembers whether night mode is on</td><td>Until you clear it</td></tr>
+          <tr><td>Cloudflare security cookies (for example __cf_bm)</td><td>Strictly necessary cookie</td><td>Set by our hosting provider, when needed, to protect the site from bots and attacks</td><td>Up to 30 minutes</td></tr>
+        </tbody>
+      </table>
+      <p>The preference items stay in your browser and are never sent to us. Strictly necessary cookies do not require consent.</p>
+
+      <h2>3. Third-party services</h2>
+      <p>When you load our pages, fonts are delivered by Google Fonts. When you submit the checkout form, the order request is sent through EmailJS. These services receive technical information such as your IP address in order to work, but we do not use them to track you. Payment providers you use to pay may set their own cookies on their own pages.</p>
+
+      <h2>4. Managing cookies</h2>
+      <p>You can delete cookies and local storage, or block them, in your browser settings. If you do, the site still works, but it will not remember your text size or night mode preference.</p>
+"@
+
+LegalPage '/accessibility' 'Accessibility Statement' 'Our commitment to making EasyEye Puzzles easy to use for everyone, including people with low vision.' @"
+      <p>Accessibility is at the heart of EasyEye Puzzles. Our books are designed for readers with low vision, and we want our website to be just as comfortable to use.</p>
+
+      <h2>1. What we have done</h2>
+      <ul>
+        <li><strong>Readable typeface:</strong> we use Atkinson Hyperlegible, a font designed for readers with low vision, at a large base size.</li>
+        <li><strong>Text size controls:</strong> the A, A+ and A++ buttons at the top of every page make all text larger.</li>
+        <li><strong>Night mode:</strong> a darker colour scheme that is gentler on tired or light-sensitive eyes.</li>
+        <li><strong>Strong contrast</strong> between text and background, and large buttons that are easy to tap.</li>
+        <li><strong>Keyboard access:</strong> every page can be used with a keyboard, with a visible focus outline and a "Skip to content" link.</li>
+        <li><strong>Screen reader support:</strong> images have text descriptions, and pages use clear headings and landmarks.</li>
+        <li><strong>Reduced motion:</strong> animations are switched off if your device asks for reduced motion.</li>
+      </ul>
+
+      <h2>2. Our goal</h2>
+      <p>We aim to meet the Web Content Accessibility Guidelines (WCAG) 2.2 at level AA. We continue to test and improve the site.</p>
+
+      <h2>3. Known limitations</h2>
+      <p>Sample book pages are shown as images. They are described in text, but the individual puzzle letters in them cannot be read by screen readers.</p>
+
+      <h2>4. Feedback</h2>
+      <p>If you have difficulty using any part of our website, or need information in a different format, please tell us at <a href="mailto:$email">$email</a>. We will do our best to help, and to fix the problem.</p>
+"@
 
 # ---------- 404 ----------
 $nfBody = @"
@@ -714,7 +957,7 @@ function CheckoutPage([string]$id, [string]$name, [string]$subtitle, $price, [st
       <div class="hp" aria-hidden="true"><label for="website">Leave this empty</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
       <p id="form-error" class="form-error" role="alert" tabindex="-1" hidden></p>
       <button class="btn btn-accent checkout-submit" type="submit">Submit order &middot; $(Money $price)</button>
-      <p class="checkout-note">We will contact you by email to confirm your order and payment.</p>
+      <p class="checkout-note">We will contact you by email to confirm your order and payment. By submitting, you agree to our <a href="/terms" target="_blank">Terms</a>, <a href="/refund-policy" target="_blank">Refund Policy</a> and <a href="/privacy" target="_blank">Privacy Policy</a>.</p>
     </form>
 
     <div id="order-done" class="order-done" tabindex="-1" hidden>
@@ -745,7 +988,7 @@ foreach ($x in $bundles) {
 }
 
 # ---------- Sitemap & robots ----------
-$urls = @('/', '/books', '/bundles', '/about', '/contact', '/privacy') + ($books | ForEach-Object { "/books/$($_.id)" })
+$urls = @('/', '/books', '/bundles', '/about', '/contact') + ($legalPages | ForEach-Object { $_.path }) + ($books | ForEach-Object { "/books/$($_.id)" })
 $today = (Get-Date).ToString('yyyy-MM-dd')
 $sm = "<?xml version=""1.0"" encoding=""UTF-8""?>`n<urlset xmlns=""http://www.sitemaps.org/schemas/sitemap/0.9"">`n" + (($urls | ForEach-Object { "  <url><loc>$site$_</loc><lastmod>$today</lastmod></url>" }) -join "`n") + "`n</urlset>`n"
 WriteFile 'sitemap.xml' $sm
