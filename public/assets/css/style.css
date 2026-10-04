@@ -85,6 +85,13 @@ html[data-contrast="high"] .a11y-bar { background: #000; color: #fff; border-bot
 .site-header .container { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 84px; }
 .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); font-weight: 700; font-size: 1.3rem; }
 .logo-mark { width: 48px; height: 48px; flex: none; }
+.logo > span { line-height: 1.2; }
+@media (max-width: 480px) {
+  .logo { font-size: 1.05rem; }
+  .logo small { display: none !important; }
+  .logo-mark { width: 40px; height: 40px; }
+  .a11y-bar span { display: none; }
+}
 .logo small { display: block; font-size: .7rem; font-weight: 400; color: var(--ink-soft); letter-spacing: .04em; text-transform: uppercase; }
 .nav ul { list-style: none; display: flex; gap: 6px; margin: 0; padding: 0; }
 .nav a { display: block; padding: 10px 16px; border-radius: 12px; text-decoration: none; color: var(--ink); font-weight: 700; }
