@@ -320,4 +320,7 @@ html[data-theme="night"] .form-error { background: #4a1f1f; color: #ffd7d7; }
 @media (max-width: 480px) {
   .checkout-card { padding: 20px; }
   .checkout-product { flex-direction: column; text-align: center; }
-}
+}.checkout-covers { display: flex; align-items: center; flex: none; }
+.checkout-covers img { width: 64px; border-radius: 6px; border: 2px solid #fff; box-shadow: 0 6px 14px rgba(20,33,61,.22); }
+.checkout-covers img + img { margin-left: -22px; }
+.checkout-covers span { margin-left: 6px; font-weight: 700; color: var(--ink-soft); }

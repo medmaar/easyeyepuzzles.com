@@ -20,6 +20,21 @@
     return 'EEP-' + String(d.getFullYear()).slice(2) + pad(d.getMonth() + 1) + pad(d.getDate()) + '-' + rand;
   }
 
+  // Best guess from the browser (no lookup service): time zone + language
+  function country() {
+    var tz = '', lang = navigator.language || '';
+    try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
+    return [tz, lang].filter(Boolean).join(' / ') || 'Unknown';
+  }
+
+  function device() {
+    var ua = navigator.userAgent;
+    var type = /iPad|Tablet/i.test(ua) ? 'Tablet' : (/Mobi|Android|iPhone/i.test(ua) ? 'Mobile' : 'Desktop');
+    var os = /Windows/i.test(ua) ? 'Windows' : /iPhone|iPad|iOS/i.test(ua) ? 'iOS' : /Android/i.test(ua) ? 'Android' : /Mac OS X/i.test(ua) ? 'macOS' : /Linux/i.test(ua) ? 'Linux' : 'Other';
+    var browser = /Edg\//.test(ua) ? 'Edge' : /OPR\//.test(ua) ? 'Opera' : /Chrome\//.test(ua) ? 'Chrome' : /Firefox\//.test(ua) ? 'Firefox' : /Safari\//.test(ua) ? 'Safari' : 'Other';
+    return type + ' - ' + os + ' - ' + browser;
+  }
+
   function showError(msg) {
     errorBox.textContent = msg;
     errorBox.hidden = false;
@@ -63,11 +78,17 @@
       customer_name: name,
       customer_email: email,
       customer_phone: phone,
+      // variables used by the "Contact Us" EmailJS template
+      site_name: 'EasyEye Puzzles',
+      plan: d.product + ' - ' + d.price + ' USD (' + d.kind + ')',
+      from_name: name,
+      from_email: email,
+      country: country(),
+      device: device(),
       // common aliases so the email template can use whichever names it prefers
       name: name,
       email: email,
       phone: phone,
-      from_name: name,
       reply_to: email,
       to_email: EMAILJS.toEmail,
       title: 'New order: ' + d.product + ' (' + d.price + ')',

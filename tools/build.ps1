@@ -571,7 +571,8 @@ foreach ($b in $books) {
 foreach ($x in $bundles) {
   $n = @($x.books).Count
   $titles = ($x.books | ForEach-Object { $byId[$_].title }) -join ', '
-  WriteFile "checkout\$($x.id).html" (CheckoutPage $x.id $x.name "Includes: $titles" $x.price "Bundle of $n books" "/bundles#$($x.id)" (CoverStack $x))
+  $covers = '<div class="checkout-covers" aria-hidden="true">' + (($x.books | Select-Object -First 3 | ForEach-Object { "<img src=""/assets/books/$($byId[$_].img)-cover.jpg"" alt="""" width=""600"" height=""783"">" }) -join '') + $(if ($n -gt 3) { "<span>+$($n - 3)</span>" } else { '' }) + '</div>'
+  WriteFile "checkout\$($x.id).html" (CheckoutPage $x.id $x.name "Includes: $titles" $x.price "Bundle of $n books" "/bundles#$($x.id)" $covers)
 }
 
 # ---------- Sitemap & robots ----------
