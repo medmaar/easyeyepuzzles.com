@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkout: Giochi di Memoria per Anziani Intelligenti | EasyEye Puzzles</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#14213d">
+<link rel="icon" href="/favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css?v=202610041447">
+<script>try{var d=document.documentElement,s=localStorage.getItem('eep-size'),t=localStorage.getItem('eep-theme');if(s&&s!=='m')d.setAttribute('data-size',s);if(t==='night'||(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches))d.setAttribute('data-theme','night');}catch(e){}</script>
+</head>
+<body class="checkout-body">
+<main class="checkout">
+  <a class="checkout-back" href="/books/giochi-di-memoria-anziani-intelligenti">&larr; Back</a>
+  <div class="checkout-card">
+    <div class="checkout-product">
+      <img class="checkout-cover" src="/assets/books/memoria-intelligenti-cover.jpg" alt="" width="600" height="783">
+      <div>
+        <p class="checkout-kind">Italian book</p>
+        <h1>Giochi di Memoria per Anziani Intelligenti</h1>
+        <p class="checkout-sub">Memory Games for Smart Seniors</p>
+        <p class="checkout-price">$45 <span>USD</span></p>
+      </div>
+    </div>
+
+    <form id="checkout-form" novalidate data-product="Giochi di Memoria per Anziani Intelligenti" data-price="$45" data-kind="Italian book" data-url="https://easyeyepuzzles.com/books/giochi-di-memoria-anziani-intelligenti">
+      <div class="field">
+        <label for="name">Full name</label>
+        <input id="name" name="name" type="text" autocomplete="name" required>
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required>
+      </div>
+      <div class="field">
+        <label for="phone">Phone number</label>
+        <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required>
+      </div>
+      <div class="hp" aria-hidden="true"><label for="website">Leave this empty</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+      <p id="form-error" class="form-error" role="alert" tabindex="-1" hidden></p>
+      <button class="btn btn-accent checkout-submit" type="submit">Submit order &middot; $45</button>
+      <p class="checkout-note">We will contact you by email to confirm your order and payment.</p>
+    </form>
+
+    <div id="order-done" class="order-done" tabindex="-1" hidden>
+      <div class="done-icon" aria-hidden="true">&#10003;</div>
+      <h2>Thank you, your order is received!</h2>
+      <p>Order number: <strong id="done-id"></strong></p>
+      <p>We will contact you at <strong id="done-email"></strong> to confirm your order and payment.</p>
+      <a class="btn btn-primary" href="/">Back to EasyEye Puzzles</a>
+    </div>
+  </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="/assets/js/checkout.js?v=202610041447"></script>
+</body>
+</html>

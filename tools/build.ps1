@@ -34,12 +34,10 @@ function LangCount([string]$code) { @($books | Where-Object { $_.lang -eq $code 
 function Money($n) { '$' + $n }
 function BundleValue($x) { $s = 0; foreach ($id in $x.books) { $s += $byId[$id].price }; $s }
 
-# Checkout link: the item's buyUrl (e.g. a Stripe / PayPal payment link) or, until one is set, an order email.
-function OrderUrl([string]$name, $price, [string]$buyUrl) {
+# Checkout link: the item's buyUrl if set (e.g. an external payment link), otherwise our own /checkout/<id> page.
+function OrderUrl([string]$id, [string]$buyUrl) {
   if ($buyUrl) { return $buyUrl }
-  $subject = [Uri]::EscapeDataString("Order: $name ($(Money $price))")
-  $bodyText = [Uri]::EscapeDataString("Hello, I would like to order: $name ($(Money $price)).`n`nMy name:`nShipping address:`n")
-  return "mailto:$email" + "?subject=$subject&body=$bodyText"
+  return "/checkout/$id"
 }
 
 $moon = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>'
@@ -180,7 +178,7 @@ function BundleCard($x) {
     <details class="included"><summary>What's included</summary><ul>$items</ul></details>
     <div class="bundle-buy">
       <div class="price-block"><span class="price">$(Money $x.price)</span><s class="was" aria-label="Regular price $(Money $value)">$(Money $value)</s></div>
-      <a class="btn btn-accent" href="$(Enc (OrderUrl $x.name $x.price $x.buyUrl))">Buy bundle</a>
+      <a class="btn btn-accent" href="$(Enc (OrderUrl $x.id $x.buyUrl))">Buy bundle</a>
     </div>
   </div>
 </article>
@@ -338,7 +336,7 @@ foreach ($b in $books) {
   $paras = ($b.description | ForEach-Object { "<p>$(Enc $_)</p>" }) -join "`n"
   $feats = ($b.features | ForEach-Object { "<li>$(Enc $_)</li>" }) -join ''
   $themes = ($b.themes | ForEach-Object { "<span class=""tag"">$(Enc $_)</span>" }) -join ''
-  $order = OrderUrl $b.title $b.price $b.buyUrl
+  $order = OrderUrl $b.id $b.buyUrl
   $samples = @(1, 2) | ForEach-Object {
     $src = "/assets/books/$($b.img)-sample$_.jpg"
     "<figure><button type=""button"" data-zoom=""$src"" aria-label=""Enlarge sample page $_""><img src=""$src"" alt=""Sample page $_ from $(Enc $b.title)"" width=""700"" height=""913"" loading=""lazy""></button><figcaption>Sample page $_. Click to enlarge.</figcaption></figure>"
@@ -498,11 +496,89 @@ $nfBody = @"
 "@
 WriteFile '404.html' (Layout 'Page not found' 'Page not found.' '/404' '' $nfBody)
 
+# ---------- Checkout pages (one per product, no site header/footer) ----------
+function CheckoutPage([string]$id, [string]$name, [string]$subtitle, $price, [string]$kind, [string]$backUrl, [string]$imgHtml) {
+  $productUrl = "$site$backUrl"
+@"
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkout: $(Enc $name) | EasyEye Puzzles</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#14213d">
+<link rel="icon" href="/favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css?v=$ver">
+<script>try{var d=document.documentElement,s=localStorage.getItem('eep-size'),t=localStorage.getItem('eep-theme');if(s&&s!=='m')d.setAttribute('data-size',s);if(t==='night'||(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches))d.setAttribute('data-theme','night');}catch(e){}</script>
+</head>
+<body class="checkout-body">
+<main class="checkout">
+  <a class="checkout-back" href="$backUrl">&larr; Back</a>
+  <div class="checkout-card">
+    <div class="checkout-product">
+      $imgHtml
+      <div>
+        <p class="checkout-kind">$(Enc $kind)</p>
+        <h1>$(Enc $name)</h1>
+        $(if ($subtitle) { "<p class=""checkout-sub"">$(Enc $subtitle)</p>" })
+        <p class="checkout-price">$(Money $price) <span>USD</span></p>
+      </div>
+    </div>
+
+    <form id="checkout-form" novalidate data-product="$(Enc $name)" data-price="$(Money $price)" data-kind="$(Enc $kind)" data-url="$productUrl">
+      <div class="field">
+        <label for="name">Full name</label>
+        <input id="name" name="name" type="text" autocomplete="name" required>
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required>
+      </div>
+      <div class="field">
+        <label for="phone">Phone number</label>
+        <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required>
+      </div>
+      <div class="hp" aria-hidden="true"><label for="website">Leave this empty</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+      <p id="form-error" class="form-error" role="alert" tabindex="-1" hidden></p>
+      <button class="btn btn-accent checkout-submit" type="submit">Submit order &middot; $(Money $price)</button>
+      <p class="checkout-note">We will contact you by email to confirm your order and payment.</p>
+    </form>
+
+    <div id="order-done" class="order-done" tabindex="-1" hidden>
+      <div class="done-icon" aria-hidden="true">&#10003;</div>
+      <h2>Thank you, your order is received!</h2>
+      <p>Order number: <strong id="done-id"></strong></p>
+      <p>We will contact you at <strong id="done-email"></strong> to confirm your order and payment.</p>
+      <a class="btn btn-primary" href="/">Back to EasyEye Puzzles</a>
+    </div>
+  </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="/assets/js/checkout.js?v=$ver"></script>
+</body>
+</html>
+"@
+}
+
+foreach ($b in $books) {
+  $img = "<img class=""checkout-cover"" src=""/assets/books/$($b.img)-cover.jpg"" alt="""" width=""600"" height=""783"">"
+  WriteFile "checkout\$($b.id).html" (CheckoutPage $b.id $b.title $b.english $b.price "$($b.language) book" "/books/$($b.id)" $img)
+}
+foreach ($x in $bundles) {
+  $n = @($x.books).Count
+  $titles = ($x.books | ForEach-Object { $byId[$_].title }) -join ', '
+  WriteFile "checkout\$($x.id).html" (CheckoutPage $x.id $x.name "Includes: $titles" $x.price "Bundle of $n books" "/bundles#$($x.id)" (CoverStack $x))
+}
+
 # ---------- Sitemap & robots ----------
 $urls = @('/', '/books', '/bundles', '/about', '/contact', '/privacy') + ($books | ForEach-Object { "/books/$($_.id)" })
 $today = (Get-Date).ToString('yyyy-MM-dd')
 $sm = "<?xml version=""1.0"" encoding=""UTF-8""?>`n<urlset xmlns=""http://www.sitemaps.org/schemas/sitemap/0.9"">`n" + (($urls | ForEach-Object { "  <url><loc>$site$_</loc><lastmod>$today</lastmod></url>" }) -join "`n") + "`n</urlset>`n"
 WriteFile 'sitemap.xml' $sm
-WriteFile 'robots.txt' "User-agent: *`nAllow: /`n`nSitemap: $site/sitemap.xml`n"
+WriteFile 'robots.txt' "User-agent: *`nAllow: /`nDisallow: /checkout/`n`nSitemap: $site/sitemap.xml`n"
 
 "Built $($books.Count) book pages and $($bundles.Count) bundles into $pub"
