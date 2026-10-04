@@ -2,7 +2,7 @@
   {
     "id": "parole-intrecciate-anziani-ipovedenti",
     "img": "parole-ipovedenti",
-    "price": 49,
+    "price": 120,
     "title": "Parole Intrecciate per Anziani e Ipovedenti",
     "english": "Large Print Word Search for Seniors & Low Vision",
     "language": "Italian",
@@ -51,7 +51,7 @@
   {
     "id": "giochi-di-memoria-per-anziani",
     "img": "memoria-anziani",
-    "price": 29,
+    "price": 36,
     "title": "Giochi di Memoria per Anziani",
     "english": "Memory Games for Seniors",
     "language": "Italian",
@@ -76,7 +76,7 @@
   {
     "id": "giochi-di-memoria-anziani-intelligenti",
     "img": "memoria-intelligenti",
-    "price": 36,
+    "price": 45,
     "title": "Giochi di Memoria per Anziani Intelligenti",
     "english": "Memory Games for Smart Seniors",
     "language": "Italian",
@@ -126,7 +126,7 @@
   {
     "id": "viaggio-per-italia-libro-attivita",
     "img": "viaggio-italia",
-    "price": 36,
+    "price": 49,
     "title": "Viaggio per l'Italia: Libro di Attività",
     "english": "A Journey Through Italy: Activity Book",
     "language": "Italian",
@@ -199,7 +199,7 @@
   {
     "id": "mots-croises-seniors-malvoyants",
     "img": "mots-croises",
-    "price": 45,
+    "price": 99,
     "title": "Mots Croisés pour Seniors et Malvoyants",
     "english": "Large Print French Crosswords for Seniors & Low Vision",
     "language": "French",
@@ -224,7 +224,7 @@
   {
     "id": "mots-meles-seniors-malvoyants",
     "img": "mots-meles-seniors",
-    "price": 49,
+    "price": 105,
     "title": "Mots Mêlés pour Seniors et Malvoyants",
     "english": "Large Print French Word Search for Seniors & Low Vision",
     "language": "French",
@@ -249,7 +249,7 @@
   {
     "id": "mots-meles-malvoyants",
     "img": "mots-meles-malvoyants",
-    "price": 45,
+    "price": 75,
     "title": "Mots Mêlés Malvoyants",
     "english": "Large Print French Word Search for Low Vision",
     "language": "French",

@@ -199,7 +199,7 @@ $minPrice = ($books | Measure-Object price -Minimum).Minimum
 # ---------- Home ----------
 $featured = @('parole-intrecciate-anziani-ipovedenti', 'mots-meles-seniors-malvoyants', 'giochi-di-memoria-per-anziani', 'cruciverba-per-nonni')
 $featuredCards = (@($books | Where-Object { $featured -contains $_.id }) | ForEach-Object { Card $_ }) -join "`n"
-$homeBundles = (@($bundles | Where-Object { @('french-word-search-duo', 'low-vision-collection', 'complete-collection') -contains $_.id }) | ForEach-Object { BundleCard $_ }) -join "`n"
+$homeBundles = (@($bundles | Where-Object { @('french-word-search-duo', 'complete-french-collection', 'complete-collection') -contains $_.id }) | ForEach-Object { BundleCard $_ }) -join "`n"
 $langTiles = ($languages | ForEach-Object {
   $n = LangCount $_.code
   $sub = if ($n -gt 0) { "$n book" + $(if ($n -ne 1) { 's' } else { '' }) } else { 'Coming soon' }
