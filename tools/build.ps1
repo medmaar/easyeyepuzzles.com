@@ -227,16 +227,16 @@ $marquee = "<div class=""marquee"" aria-hidden=""true""><div class=""marquee-tra
 
 # Shop by puzzle type
 $typeInfo = @(
-  @{ name = 'Word Search'; icon = $icon.grid; text = 'Find hidden words in big, bold letter grids.' },
-  @{ name = 'Crossword'; icon = $icon.cross; text = 'Classic crosswords with clear, readable clues.' },
-  @{ name = 'Memory Games'; icon = $icon.brain; text = 'Anagrams, cryptograms, sudoku and more.' },
-  @{ name = 'Activity Book'; icon = $icon.compass; text = 'A mix of puzzles on a journey through Italy.' }
+  @{ name = 'Word Search'; art = 'parole-ipovedenti-sample1'; icon = $icon.grid; text = 'Find hidden words in big, bold letter grids.' },
+  @{ name = 'Crossword'; art = 'cruciverba-nonni-sample1'; icon = $icon.cross; text = 'Classic crosswords with clear, readable clues.' },
+  @{ name = 'Memory Games'; art = 'memoria-intelligenti-sample1'; icon = $icon.brain; text = 'Anagrams, cryptograms, sudoku and more.' },
+  @{ name = 'Activity Book'; art = 'viaggio-italia-sample1'; icon = $icon.compass; text = 'A mix of puzzles on a journey through Italy.' }
 )
 $typeTiles = ($typeInfo | ForEach-Object {
   $t = $_; $list = @($books | Where-Object { $_.type -eq $t.name })
   $n = $list.Count
   $from = ($list | Measure-Object price -Minimum).Minimum
-  $sample = "/assets/books/$($list[0].img)-sample1.jpg"
+  $sample = "/assets/books/$($t.art).jpg"
   "<a class=""type-tile"" href=""/books?type=$(TypeSlug $t.name)""><div class=""type-art"" style=""background-image:url('$sample')""></div><div class=""type-body""><span class=""type-icon"">$($t.icon)</span><h3>$($t.name)</h3><p>$($t.text)</p><span class=""type-meta"">$n book$(if ($n -ne 1) { 's' }) &middot; from $(Money $from) <b aria-hidden=""true"">&rarr;</b></span></div></a>"
 }) -join "`n"
 
