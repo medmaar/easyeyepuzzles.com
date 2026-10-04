@@ -72,6 +72,7 @@ function Layout([string]$title, [string]$desc, [string]$path, [string]$active, [
 <meta property="og:url" content="$site$path">
 <meta property="og:image" content="$ogImage">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="cryptomus" content="9180402c" />
 <meta name="theme-color" content="#14213d">
 <link rel="icon" href="/favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
