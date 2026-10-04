@@ -8,6 +8,7 @@ $pub = Join-Path $repo 'public'
 $site = 'https://easyeyepuzzles.com'
 $email = 'hello@easyeyepuzzles.com'
 $year = (Get-Date).Year
+$ver = (Get-Date).ToString('yyyyMMddHHmm')   # cache-busting for css/js
 $utf8 = New-Object System.Text.UTF8Encoding($false)
 $books = [IO.File]::ReadAllText((Join-Path $repo 'data\books.json'), $utf8) | ConvertFrom-Json
 
@@ -69,7 +70,7 @@ function Layout([string]$title, [string]$desc, [string]$path, [string]$active, [
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/style.css?v=$ver">
 <script>try{var s=localStorage.getItem('eep-size');if(s&&s!=='m')document.documentElement.setAttribute('data-size',s);if(localStorage.getItem('eep-contrast')==='high')document.documentElement.setAttribute('data-contrast','high');}catch(e){}</script>
 $extraHead
 </head>
@@ -121,7 +122,7 @@ $body
     <p class="copyright">&copy; $year EasyEye Puzzles. All rights reserved.</p>
   </div>
 </footer>
-<script src="/assets/js/main.js" defer></script>
+<script src="/assets/js/main.js?v=$ver" defer></script>
 </body>
 </html>
 "@
