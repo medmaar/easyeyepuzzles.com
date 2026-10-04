@@ -1,0 +1,262 @@
+[
+  {
+    "id": "parole-intrecciate-anziani-ipovedenti",
+    "img": "parole-ipovedenti",
+    "title": "Parole Intrecciate per Anziani e Ipovedenti",
+    "english": "Large Print Word Search for Seniors & Low Vision",
+    "language": "Italian",
+    "lang": "it",
+    "type": "Word Search",
+    "pages": 122,
+    "lowVision": true,
+    "tagline": "90 extra-large, high-contrast word search grids celebrating Italian culture.",
+    "description": [
+      "Our most accessible Italian word search book, designed for seniors and readers living with macular degeneration (AMD) or other visual difficulties. Every grid is printed in extra-large letters with strong contrast, so the eyes can relax while the mind stays busy.",
+      "Each puzzle is built around keywords from Italian tradition: cities, monuments, flavours, melodies, scientific discoveries, animals and landscapes. A lovely starting point for memories and conversations with the grandchildren."
+    ],
+    "features": [
+      "90 grids and more than 1,500 words to find",
+      "Over 30 themes across 6 big topics",
+      "Three levels: Easy, Medium and Difficult",
+      "XL letters and high contrast for low vision",
+      "Solutions included at the back"
+    ],
+    "themes": ["Treasures of Italy", "Art, Literature & Music", "Food & Wine", "History & Science", "Sport, Fashion & Entertainment", "Nature & Emotions"]
+  },
+  {
+    "id": "parole-intrecciate-anziani-adulti",
+    "img": "parole-adulti",
+    "title": "Parole Intrecciate per Anziani e Adulti",
+    "english": "Italian Word Search for Seniors & Adults",
+    "language": "Italian",
+    "lang": "it",
+    "type": "Word Search",
+    "pages": 112,
+    "lowVision": false,
+    "tagline": "A relaxing word search journey through Italy's landmarks, cuisine and culture.",
+    "description": [
+      "A word search adventure across Italy for seniors and adults. Each chapter opens with a short introduction to its theme, then invites you to hunt for the famous places, dishes and traditions that make Italy unique.",
+      "Clear, generous grids make it a comfortable daily companion, perfect for a quiet afternoon or a coffee break."
+    ],
+    "features": [
+      "Themed chapters with short introductions",
+      "Clear, easy-to-read grids",
+      "Puzzles at several difficulty levels",
+      "Solutions included"
+    ],
+    "themes": ["Geographic Landmarks", "Cinque Terre & Portofino", "Italian Cuisine", "Monuments & Cities"]
+  },
+  {
+    "id": "giochi-di-memoria-per-anziani",
+    "img": "memoria-anziani",
+    "title": "Giochi di Memoria per Anziani",
+    "english": "Memory Games for Seniors",
+    "language": "Italian",
+    "lang": "it",
+    "type": "Memory Games",
+    "pages": 126,
+    "lowVision": false,
+    "tagline": "Seven kinds of brain games in one book: word searches, crosswords, anagrams, sudoku and more.",
+    "description": [
+      "A complete brain-training workout in Italian. Instead of one puzzle type, this book mixes seven different activities so every session feels fresh and works a different part of the memory.",
+      "The puzzles explore Italian fashion, mythology, history and culture, with easy, medium and harder levels so readers can progress at their own pace."
+    ],
+    "features": [
+      "7 puzzle types in one book",
+      "Word search, crosswords, anagrams and word matching",
+      "Cryptograms, sudoku and mazes",
+      "Easy, medium and difficult levels",
+      "Full solutions section"
+    ],
+    "themes": ["Italian Fashion", "Mythology & Legends", "Italian History", "Culture & Traditions"]
+  },
+  {
+    "id": "giochi-di-memoria-anziani-intelligenti",
+    "img": "memoria-intelligenti",
+    "title": "Giochi di Memoria per Anziani Intelligenti",
+    "english": "Memory Games for Smart Seniors",
+    "language": "Italian",
+    "lang": "it",
+    "type": "Memory Games",
+    "pages": 132,
+    "lowVision": false,
+    "tagline": "Brain games that connect the traditions of the past with the vocabulary of today.",
+    "description": [
+      "Designed for curious minds who love a challenge. The puzzles move between traditional and modern vocabulary, from classic Italian culture to the words of the digital age.",
+      "Mixing word searches, crosswords, cryptograms with famous quotes, word scrambles and mazes, it keeps memory, attention and logic in good shape."
+    ],
+    "features": [
+      "Word searches and crosswords",
+      "Cryptograms with famous quotes",
+      "Word scrambles and mazes",
+      "Traditional and modern vocabulary",
+      "Solutions included"
+    ],
+    "themes": ["Traditional Vocabulary", "Modern Vocabulary", "Famous Quotes", "History & Culture"]
+  },
+  {
+    "id": "viaggio-per-italia-esercizi-variati",
+    "img": "quatro-attivita",
+    "title": "Viaggio per l'Italia: Edizione Esercizi Variati",
+    "english": "A Journey Through Italy: Mixed Puzzles Edition",
+    "language": "Italian",
+    "lang": "it",
+    "type": "Activity Book",
+    "pages": 125,
+    "lowVision": false,
+    "tagline": "Crosswords, matching games, cryptograms and sudoku that map Italy's cultural heritage.",
+    "description": [
+      "An activity book that turns a trip around Italy into a series of varied puzzles. From crosswords to matching games, from cryptograms to sudoku, each activity guides you through a different region and theme.",
+      "Exercises come in three levels (easy, medium and difficult), so beginners and experienced solvers both find the right challenge."
+    ],
+    "features": [
+      "Many different puzzle types",
+      "Three difficulty levels",
+      "Discover Italian regions and hidden treasures",
+      "Builds vocabulary and cultural knowledge",
+      "Solutions included"
+    ],
+    "themes": ["Italian Fashion Icons", "Famous Italian Brands", "Mythology & Legends", "Regions of Italy"]
+  },
+  {
+    "id": "viaggio-per-italia-libro-attivita",
+    "img": "viaggio-italia",
+    "title": "Viaggio per l'Italia: Libro di Attività",
+    "english": "A Journey Through Italy: Activity Book",
+    "language": "Italian",
+    "lang": "it",
+    "type": "Activity Book",
+    "pages": 138,
+    "lowVision": false,
+    "tagline": "Crosswords and puzzles about Italy's iconic monuments, history and mysteries.",
+    "description": [
+      "Pack your pencil and travel across Italy! This activity book combines crosswords and other puzzles about iconic monuments, little-known historical details and the mysteries of Sicily.",
+      "A cheerful, colourful gift for anyone who loves Italy, with puzzles organised by level for steady, enjoyable progress."
+    ],
+    "features": [
+      "Our largest book: 138 pages",
+      "Crosswords and varied activities",
+      "Organised by difficulty level",
+      "Great gift for lovers of Italy",
+      "Solutions included"
+    ],
+    "themes": ["Iconic Italian Monuments", "Mysteries of Sicily", "Obscure Historical Details", "Italian Culture"]
+  },
+  {
+    "id": "cruciverba-per-anziani-e-adulti",
+    "img": "cruciverba-adulti",
+    "title": "Cruciverba per Anziani e Adulti",
+    "english": "Italian Crosswords for Seniors & Adults",
+    "language": "Italian",
+    "lang": "it",
+    "type": "Crossword",
+    "pages": 120,
+    "lowVision": false,
+    "tagline": "Italian crosswords about monuments, history, art, folklore and music.",
+    "description": [
+      "Classic Italian crosswords for seniors and adults who enjoy culture and history. The clues take you through the great monuments, the stories of Italy, its art, folklore and music.",
+      "Clear grids and well-spaced clues make each crossword a pleasure to complete, one square at a time."
+    ],
+    "features": [
+      "Themed Italian crosswords",
+      "Clear grids and readable clues",
+      "Culture and history in every puzzle",
+      "Solutions included"
+    ],
+    "themes": ["Monumental Italy", "Eras & Epochs", "Flavours of Italy", "Masterpieces of Art", "Folklore", "Music"]
+  },
+  {
+    "id": "cruciverba-per-nonni",
+    "img": "cruciverba-nonni",
+    "title": "Cruciverba per Nonni",
+    "english": "Crosswords for Grandparents",
+    "language": "Italian",
+    "lang": "it",
+    "type": "Crossword",
+    "pages": 117,
+    "lowVision": false,
+    "tagline": "Crosswords for grandparents, with a fun fact after every puzzle.",
+    "description": [
+      "Made with grandparents in mind: themed Italian crosswords about history, cooking, nature, geography, music and art. After each crossword a short fun fact adds something new to talk about.",
+      "A thoughtful gift for nonna and nonno, and a good excuse to solve a puzzle together with the grandchildren."
+    ],
+    "features": [
+      "Crosswords grouped by theme",
+      "A fun fact after each puzzle",
+      "Comfortable layout",
+      "Solutions included"
+    ],
+    "themes": ["Italian History", "Italian Cooking", "Nature & Garden", "Geography", "Musical Heritage", "Artistic Heritage"]
+  },
+  {
+    "id": "mots-croises-seniors-malvoyants",
+    "img": "mots-croises",
+    "title": "Mots Croisés pour Seniors et Malvoyants",
+    "english": "Large Print French Crosswords for Seniors & Low Vision",
+    "language": "French",
+    "lang": "fr",
+    "type": "Crossword",
+    "pages": 110,
+    "lowVision": true,
+    "tagline": "Large print French crosswords from French heritage to Francophone festivals.",
+    "description": [
+      "A crossword book made with care for grandparents and lovers of the French language. Large fonts and high contrast keep the eyes comfortable, and the large pages are easy to handle.",
+      "The clues travel from French castles and cheeses to Francophone capitals and festivals, with three difficulty levels (one to three stars)."
+    ],
+    "features": [
+      "Large fonts and high contrast",
+      "Three levels: one star (easy) to three stars (expert)",
+      "Large pages that are easy to handle",
+      "A short fun fact with the puzzles",
+      "Solutions included"
+    ],
+    "themes": ["French Heritage", "Technology & Daily Life", "Historical Chronicles", "Capitals & Wonders", "Francophone Festivals"]
+  },
+  {
+    "id": "mots-meles-seniors-malvoyants",
+    "img": "mots-meles-seniors",
+    "title": "Mots Mêlés pour Seniors et Malvoyants",
+    "english": "Large Print French Word Search for Seniors & Low Vision",
+    "language": "French",
+    "lang": "fr",
+    "type": "Word Search",
+    "pages": 115,
+    "lowVision": true,
+    "tagline": "14 themes of large print French word searches, from French heritage to cinema.",
+    "description": [
+      "For everyone who wants to keep their mind sharp while going easy on their eyes. Every grid uses large letters, high contrast and an airy layout.",
+      "Fourteen themes cover French heritage, food, music, nature and cinema, in three difficulty levels. It works just as well alone as with a partner, friends or grandchildren."
+    ],
+    "features": [
+      "14 varied themes",
+      "Three levels: Easy, Medium, Difficult",
+      "Large print, high contrast and an airy layout",
+      "Easy-to-turn pages",
+      "Solutions included"
+    ],
+    "themes": ["Towns & Monuments", "French Cuisine", "Literature & Authors", "History of France", "Music", "Nature", "Cinema"]
+  },
+  {
+    "id": "mots-meles-malvoyants",
+    "img": "mots-meles-malvoyants",
+    "title": "Mots Mêlés Malvoyants",
+    "english": "Large Print French Word Search for Low Vision",
+    "language": "French",
+    "lang": "fr",
+    "type": "Word Search",
+    "pages": 126,
+    "lowVision": true,
+    "tagline": "Large print French word searches about natural wonders, world festivals and history.",
+    "description": [
+      "A large print French word search book designed for readers with low vision. The bold, well-spaced grids are easy to scan, and every word list is printed large.",
+      "The themes travel the world: everyday technology, natural wonders, world festivals and celebrations, history and capital cities."
+    ],
+    "features": [
+      "Bold, well-spaced grids",
+      "Large print word lists",
+      "Themes from around the world",
+      "Solutions included"
+    ],
+    "themes": ["Technology & Daily Life", "Natural Wonders", "Festivals of the World", "Historical Chronicles", "Capitals & Wonders"]
+  }
+]
