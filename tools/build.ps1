@@ -1,4 +1,4 @@
-# Generates the static HTML pages in /public from data/books.json.
+# Generates the static HTML pages in /public from data/books.json and data/bundles.json.
 # Usage (from the repo root):  powershell -ExecutionPolicy Bypass -File tools/build.ps1
 # Keep this file ASCII-only: Windows PowerShell 5.1 reads BOM-less scripts as ANSI.
 
@@ -11,6 +11,9 @@ $year = (Get-Date).Year
 $ver = (Get-Date).ToString('yyyyMMddHHmm')   # cache-busting for css/js
 $utf8 = New-Object System.Text.UTF8Encoding($false)
 $books = [IO.File]::ReadAllText((Join-Path $repo 'data\books.json'), $utf8) | ConvertFrom-Json
+$bundles = [IO.File]::ReadAllText((Join-Path $repo 'data\bundles.json'), $utf8) | ConvertFrom-Json
+$byId = @{}; foreach ($b in $books) { $byId[$b.id] = $b }
+foreach ($x in $bundles) { foreach ($id in $x.books) { if (-not $byId.ContainsKey($id)) { throw "Bundle $($x.id) references unknown book '$id'" } } }
 
 function Enc([string]$s) { [System.Net.WebUtility]::HtmlEncode($s) }
 function WriteFile([string]$rel, [string]$content) {
@@ -28,21 +31,24 @@ $languages = @(
 $types = @('Word Search', 'Crossword', 'Memory Games', 'Activity Book')
 function TypeSlug([string]$t) { $t.ToLower().Replace(' ', '-') }
 function LangCount([string]$code) { @($books | Where-Object { $_.lang -eq $code }).Count }
+function Money($n) { '$' + $n }
+function BundleValue($x) { $s = 0; foreach ($id in $x.books) { $s += $byId[$id].price }; $s }
 
-function BuyUrl($b) {
-  if ($b.buyUrl) { return $b.buyUrl }
-  $store = if ($b.lang -eq 'fr') { 'https://www.amazon.fr' } elseif ($b.lang -eq 'it') { 'https://www.amazon.it' } else { 'https://www.amazon.com' }
-  return "$store/s?k=" + [Uri]::EscapeDataString($b.title) + '&i=stripbooks'
+# Checkout link: the item's buyUrl (e.g. a Stripe / PayPal payment link) or, until one is set, an order email.
+function OrderUrl([string]$name, $price, [string]$buyUrl) {
+  if ($buyUrl) { return $buyUrl }
+  $subject = [Uri]::EscapeDataString("Order: $name ($(Money $price))")
+  $bodyText = [Uri]::EscapeDataString("Hello, I would like to order: $name ($(Money $price)).`n`nMy name:`nShipping address:`n")
+  return "mailto:$email" + "?subject=$subject&body=$bodyText"
 }
 
-$logo = @'
-<svg class="logo-mark" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="12" fill="#1d3a8a"/><circle cx="21" cy="21" r="11.5" fill="#fff" stroke="#ffc83d" stroke-width="4"/><text x="21" y="26" text-anchor="middle" font-family="Verdana,sans-serif" font-weight="700" font-size="13" fill="#1d3a8a">Aa</text><path d="M29.5 29.5 39 39" stroke="#ffc83d" stroke-width="5" stroke-linecap="round"/></svg>
-'@
+$moon = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>'
 
-function Layout([string]$title, [string]$desc, [string]$path, [string]$active, [string]$body, [string]$extraHead = '') {
+function Layout([string]$title, [string]$desc, [string]$path, [string]$active, [string]$body, [string]$extraHead = '', [string]$ogImage = '') {
   $navItems = @(
     @{ href = '/'; label = 'Home'; key = 'home' },
     @{ href = '/books'; label = 'All Books'; key = 'books' },
+    @{ href = '/bundles'; label = 'Bundles'; key = 'bundles' },
     @{ href = '/about'; label = 'About'; key = 'about' },
     @{ href = '/contact'; label = 'Contact'; key = 'contact' }
   )
@@ -51,6 +57,7 @@ function Layout([string]$title, [string]$desc, [string]$path, [string]$active, [
     "<li><a href=""$($_.href)""$cur>$($_.label)</a></li>"
   }) -join ''
   $fullTitle = if ($path -eq '/') { $title } else { "$title | EasyEye Puzzles" }
+  if (-not $ogImage) { $ogImage = "$site/assets/brand/og-image.jpg" }
 @"
 <!doctype html>
 <html lang="en">
@@ -65,27 +72,30 @@ function Layout([string]$title, [string]$desc, [string]$path, [string]$active, [
 <meta property="og:title" content="$(Enc $fullTitle)">
 <meta property="og:description" content="$(Enc $desc)">
 <meta property="og:url" content="$site$path">
-<meta name="theme-color" content="#1d3a8a">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:image" content="$ogImage">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#14213d">
+<link rel="icon" href="/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/css/style.css?v=$ver">
-<script>try{var s=localStorage.getItem('eep-size');if(s&&s!=='m')document.documentElement.setAttribute('data-size',s);if(localStorage.getItem('eep-contrast')==='high')document.documentElement.setAttribute('data-contrast','high');}catch(e){}</script>
+<script>try{var d=document.documentElement,s=localStorage.getItem('eep-size'),t=localStorage.getItem('eep-theme');if(s&&s!=='m')d.setAttribute('data-size',s);if(t==='night'||(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches))d.setAttribute('data-theme','night');}catch(e){}</script>
 $extraHead
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 <div class="a11y-bar"><div class="container" role="group" aria-label="Reading comfort">
-  <span>Text size:</span>
+  <span>Text size</span>
   <button class="a11y-btn" type="button" data-set-size="m" aria-label="Normal text size">A</button>
-  <button class="a11y-btn" type="button" data-set-size="l" aria-label="Large text size" style="font-size:1.1em">A+</button>
-  <button class="a11y-btn" type="button" data-set-size="xl" aria-label="Extra large text size" style="font-size:1.25em">A++</button>
-  <button class="a11y-btn" type="button" data-toggle-contrast aria-pressed="false">High contrast</button>
+  <button class="a11y-btn" type="button" data-set-size="l" aria-label="Large text size">A+</button>
+  <button class="a11y-btn" type="button" data-set-size="xl" aria-label="Extra large text size">A++</button>
+  <button class="a11y-btn" type="button" data-toggle-night aria-pressed="false">$moon Night mode</button>
 </div></div>
 <header class="site-header">
   <div class="container">
-    <a class="logo" href="/" aria-label="EasyEye Puzzles home">$logo<span>EasyEye Puzzles<small>Large print activity books</small></span></a>
+    <a class="logo" href="/"><img src="/assets/brand/logo.png" alt="EasyEye Puzzles" width="640" height="189"></a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
     <nav class="nav" id="site-nav" aria-label="Main"><ul>$nav</ul></nav>
   </div>
@@ -97,17 +107,17 @@ $body
   <div class="container">
     <div class="footer-grid">
       <div>
-        <a class="logo" href="/" style="color:#fff">$logo<span>EasyEye Puzzles</span></a>
+        <a class="footer-brand" href="/"><img src="/assets/brand/icon-512.png" alt="" width="56" height="56"><span>EasyEye Puzzles</span></a>
         <p style="margin-top:16px;max-width:42ch">Large print puzzle and activity books that are easy on the eyes and good for the mind. Available in Italian and French, with English and more languages coming soon.</p>
       </div>
       <div>
-        <h3>Books</h3>
+        <h3>Shop</h3>
         <ul>
           <li><a href="/books?lang=it">Italian books</a></li>
           <li><a href="/books?lang=fr">French books</a></li>
           <li><a href="/books?type=word-search">Word search</a></li>
           <li><a href="/books?type=crossword">Crosswords</a></li>
-          <li><a href="/books?type=memory-games">Memory games</a></li>
+          <li><a href="/bundles">Bundles &amp; savings</a></li>
         </ul>
       </div>
       <div>
@@ -119,7 +129,7 @@ $body
         </ul>
       </div>
     </div>
-    <p class="copyright">&copy; $year EasyEye Puzzles. All rights reserved.</p>
+    <p class="copyright">&copy; $year EasyEye Puzzles. All rights reserved. Prices in US dollars.</p>
   </div>
 </footer>
 <script src="/assets/js/main.js?v=$ver" defer></script>
@@ -142,7 +152,35 @@ function Card($b) {
     $(Tags $b)
     <h3><a href="/books/$($b.id)">$(Enc $b.title)</a></h3>
     <p class="sub">$(Enc $b.english)</p>
-    <span class="more" aria-hidden="true">See inside &rarr;</span>
+    <div class="card-foot"><span class="price">$(Money $b.price)</span><span class="more" aria-hidden="true">See inside &rarr;</span></div>
+  </div>
+</article>
+"@
+}
+
+function CoverStack($x) {
+  $ids = @($x.books | Select-Object -First 4)
+  $imgs = ($ids | ForEach-Object { "<img src=""/assets/books/$($byId[$_].img)-cover.jpg"" alt="""" width=""600"" height=""783"" loading=""lazy"">" }) -join ''
+  "<div class=""cover-stack n$($ids.Count)"" aria-hidden=""true"">$imgs</div>"
+}
+
+function BundleCard($x) {
+  $value = BundleValue $x
+  $save = $value - $x.price
+  $items = ($x.books | ForEach-Object { $bk = $byId[$_]; "<li><a href=""/books/$($bk.id)"">$(Enc $bk.title)</a> <span class=""muted"">($(Enc $bk.language), $(Money $bk.price))</span></li>" }) -join ''
+  $n = @($x.books).Count
+@"
+<article class="bundle-card" id="$($x.id)">
+  $(CoverStack $x)
+  <div class="bundle-body">
+    <div class="tags"><span class="tag tag-lv">$n books</span><span class="tag">Save $(Money $save)</span></div>
+    <h3>$(Enc $x.name)</h3>
+    <p class="sub">$(Enc $x.tagline)</p>
+    <details class="included"><summary>What's included</summary><ul>$items</ul></details>
+    <div class="bundle-buy">
+      <div class="price-block"><span class="price">$(Money $x.price)</span><s class="was" aria-label="Regular price $(Money $value)">$(Money $value)</s></div>
+      <a class="btn btn-accent" href="$(Enc (OrderUrl $x.name $x.price $x.buyUrl))">Buy bundle</a>
+    </div>
   </div>
 </article>
 "@
@@ -155,9 +193,12 @@ $icon = @{
   gift = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18M12 8S10 3 7.5 4 9 8 12 8zm0 0s2-5 4.5-4S15 8 12 8z"/></svg>'
 }
 
+$minPrice = ($books | Measure-Object price -Minimum).Minimum
+
 # ---------- Home ----------
 $featured = @('parole-intrecciate-anziani-ipovedenti', 'mots-meles-seniors-malvoyants', 'giochi-di-memoria-per-anziani', 'cruciverba-per-nonni')
 $featuredCards = (@($books | Where-Object { $featured -contains $_.id }) | ForEach-Object { Card $_ }) -join "`n"
+$homeBundles = (@($bundles | Where-Object { @('french-word-search-duo', 'low-vision-collection', 'complete-collection') -contains $_.id }) | ForEach-Object { BundleCard $_ }) -join "`n"
 $langTiles = ($languages | ForEach-Object {
   $n = LangCount $_.code
   $sub = if ($n -gt 0) { "$n book" + $(if ($n -ne 1) { 's' } else { '' }) } else { 'Coming soon' }
@@ -171,10 +212,10 @@ $homeBody = @"
     <div>
       <span class="eyebrow">Large print &middot; High contrast &middot; Gentle on the eyes</span>
       <h1>Puzzle books that are easy on the eyes and great for the mind</h1>
-      <p class="lead">Word searches, crosswords and memory games in big, clear print, made for seniors, people with low vision and anyone who loves a good puzzle.</p>
+      <p class="lead">Word searches, crosswords and memory games in big, clear print, made for seniors, people with low vision and anyone who loves a good puzzle. Books from $(Money $minPrice).</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="/books">Browse all books</a>
-        <a class="btn btn-ghost" href="#languages">Shop by language</a>
+        <a class="btn btn-ghost" href="/bundles">Save with bundles</a>
       </div>
     </div>
     <div class="hero-stack" aria-hidden="true">
@@ -206,7 +247,16 @@ $featuredCards
   </div>
 </section>
 
-<section class="section-alt" id="languages" aria-labelledby="langs-h">
+<section class="section-alt" aria-labelledby="bundles-h">
+  <div class="container">
+    <div class="section-head"><div><h2 id="bundles-h">Bundle and save</h2><p>Buy more books together and pay less. Our biggest bundle saves $(Money ((BundleValue ($bundles | Where-Object { $_.id -eq 'complete-collection' })) - ($bundles | Where-Object { $_.id -eq 'complete-collection' }).price)).</p></div><a class="btn btn-ghost" href="/bundles">See all $($bundles.Count) bundles</a></div>
+    <div class="bundle-grid">
+$homeBundles
+    </div>
+  </div>
+</section>
+
+<section id="languages" aria-labelledby="langs-h">
   <div class="container">
     <div class="section-head"><div><h2 id="langs-h">Shop by language</h2><p>Puzzles feel more natural in the language you grew up with, and they make a lovely gift for family abroad.</p></div></div>
     <div class="langs">
@@ -215,14 +265,15 @@ $langTiles
   </div>
 </section>
 
-<section aria-labelledby="faq-h">
+<section class="section-alt" aria-labelledby="faq-h">
   <div class="container">
     <div class="section-head"><div><h2 id="faq-h">Frequently asked questions</h2></div></div>
     <div class="faq">
       <details><summary>Who are these books for?</summary><div><p>Our books are made for seniors, adults and anyone with low vision, including people living with macular degeneration (AMD). The large print and simple layout make them comfortable for everyone.</p></div></details>
       <details><summary>Is the website in English but the books in other languages?</summary><div><p>Yes. Each book page tells you the language of the puzzles. Today we publish books in <strong>Italian</strong> and <strong>French</strong>, and English and more languages are coming soon.</p></div></details>
       <details><summary>Are the solutions included?</summary><div><p>Yes, every book has a full solutions section at the back.</p></div></details>
-      <details><summary>How do I buy a book?</summary><div><p>Open any book and use the <strong>Buy on Amazon</strong> button. You can order the paperback from your local Amazon store.</p></div></details>
+      <details><summary>How do I order?</summary><div><p>Open any book or bundle and press <strong>Buy now</strong>. All prices are in US dollars.</p></div></details>
+      <details><summary>Do you offer discounts?</summary><div><p>Yes. Our <a href="/bundles">bundles</a> group 2 to 11 books at a lower price than buying them one by one.</p></div></details>
     </div>
   </div>
 </section>
@@ -237,7 +288,7 @@ $langTiles
 </section>
 "@
 $orgLd = @"
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"EasyEye Puzzles","url":"$site","logo":"$site/favicon.svg"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"EasyEye Puzzles","url":"$site","logo":"$site/assets/brand/icon-512.png"}</script>
 "@
 WriteFile 'index.html' (Layout 'EasyEye Puzzles: Large Print Puzzle Books for Seniors & Low Vision' 'Large print word search, crossword and memory game books for seniors and people with low vision. Italian and French activity books, with more languages coming soon.' '/' 'home' $homeBody $orgLd)
 
@@ -249,7 +300,7 @@ $catalogBody = @"
 <section>
   <div class="container">
     <h1>All puzzle &amp; activity books</h1>
-    <p class="lead" style="max-width:60ch;color:var(--ink-soft)">Large print puzzle books in several languages. Use the buttons below to filter by language or puzzle type.</p>
+    <p class="lead" style="max-width:60ch;color:var(--ink-soft)">Large print puzzle books in several languages. Use the buttons below to filter by language or puzzle type. Want more than one book? <a href="/bundles">Save with a bundle</a>.</p>
     <div class="filter-group" role="group" aria-label="Filter by language"><span class="label">Language:</span>$langChips</div>
     <div class="filter-group" role="group" aria-label="Filter by puzzle type"><span class="label">Puzzle type:</span>$typeChips</div>
     <p class="result-count" data-result-count aria-live="polite"></p>
@@ -266,15 +317,44 @@ $allCards
 "@
 WriteFile 'books.html' (Layout 'All Large Print Puzzle Books' 'Browse every EasyEye Puzzles book: large print word search, crosswords, memory games and activity books in Italian and French.' '/books' 'books' $catalogBody)
 
+# ---------- Bundles ----------
+$allBundles = ($bundles | ForEach-Object { BundleCard $_ }) -join "`n"
+$bundlesBody = @"
+<section>
+  <div class="container">
+    <h1>Bundles &amp; savings</h1>
+    <p class="lead" style="max-width:62ch;color:var(--ink-soft)">Buy books together and save. Each bundle shows its regular price (the books bought one by one) and how much you save.</p>
+    <div class="bundle-grid">
+$allBundles
+    </div>
+  </div>
+</section>
+"@
+WriteFile 'bundles.html' (Layout 'Bundles & Savings' 'Save on large print puzzle books with EasyEye Puzzles bundles: from 2-book duos to the complete 11-book collection.' '/bundles' 'bundles' $bundlesBody)
+
 # ---------- Book pages ----------
 foreach ($b in $books) {
   $paras = ($b.description | ForEach-Object { "<p>$(Enc $_)</p>" }) -join "`n"
   $feats = ($b.features | ForEach-Object { "<li>$(Enc $_)</li>" }) -join ''
   $themes = ($b.themes | ForEach-Object { "<span class=""tag"">$(Enc $_)</span>" }) -join ''
-  $buy = BuyUrl $b
+  $order = OrderUrl $b.title $b.price $b.buyUrl
   $samples = @(1, 2) | ForEach-Object {
     $src = "/assets/books/$($b.img)-sample$_.jpg"
     "<figure><button type=""button"" data-zoom=""$src"" aria-label=""Enlarge sample page $_""><img src=""$src"" alt=""Sample page $_ from $(Enc $b.title)"" width=""700"" height=""913"" loading=""lazy""></button><figcaption>Sample page $_. Click to enlarge.</figcaption></figure>"
+  }
+  $inBundles = @($bundles | Where-Object { $_.books -contains $b.id } | Select-Object -First 3)
+  $bundleSection = ''
+  if ($inBundles.Count -gt 0) {
+    $bundleSection = @"
+<section aria-labelledby="save">
+  <div class="container">
+    <div class="section-head"><div><h2 id="save">Save with a bundle</h2><p>This book is part of these bundles.</p></div><a class="btn btn-ghost" href="/bundles">All bundles</a></div>
+    <div class="bundle-grid">
+$(($inBundles | ForEach-Object { BundleCard $_ }) -join "`n")
+    </div>
+  </div>
+</section>
+"@
   }
   $related = ($books | Where-Object { $_.id -ne $b.id -and ($_.lang -eq $b.lang -or $_.type -eq $b.type) } | Select-Object -First 4 | ForEach-Object { Card $_ }) -join "`n"
   $lvText = if ($b.lowVision) { 'Yes, extra large print' } else { 'Clear, readable print' }
@@ -289,6 +369,10 @@ foreach ($b in $books) {
         <h1 style="margin-top:14px">$(Enc $b.english)</h1>
         <p class="original" lang="$($b.lang)">$(Enc $b.title)</p>
         <p style="font-size:1.15rem">$(Enc $b.tagline)</p>
+        <div class="buy-box">
+          <div class="price-block"><span class="price price-lg">$(Money $b.price)</span><span class="muted">USD</span></div>
+          <a class="btn btn-accent" href="$(Enc $order)">Buy now</a>
+        </div>
         <ul class="facts">
           <li><b>Language</b>$(Enc $b.language)</li>
           <li><b>Puzzle type</b>$(Enc $b.type)</li>
@@ -296,10 +380,6 @@ foreach ($b in $books) {
           <li><b>Format</b>Large 8.5 x 11 in</li>
           <li><b>Print</b>$lvText</li>
         </ul>
-        <div class="buy-box">
-          <p>Available as a paperback on Amazon.</p>
-          <a class="btn btn-accent" href="$(Enc $buy)" target="_blank" rel="noopener">Buy on Amazon</a>
-        </div>
         <h2>About this book</h2>
         $paras
         <h2>What's inside</h2>
@@ -319,7 +399,8 @@ $($samples -join "`n")
     </div>
   </div>
 </section>
-<section aria-labelledby="related">
+$bundleSection
+<section class="section-alt" aria-labelledby="related">
   <div class="container">
     <div class="section-head"><div><h2 id="related">You may also like</h2></div><a class="btn btn-ghost" href="/books">All books</a></div>
     <div class="book-grid">
@@ -334,9 +415,10 @@ $related
     inLanguage = $b.lang; numberOfPages = $b.pages; bookFormat = 'https://schema.org/Paperback'
     image = "$site/assets/books/$($b.img)-cover.jpg"; description = $b.tagline; url = "$site/books/$($b.id)"
     publisher = @{ '@type' = 'Organization'; name = 'EasyEye Puzzles' }
-  } | ConvertTo-Json -Compress
-  $extra = "<meta property=""og:image"" content=""$site/assets/books/$($b.img)-cover.jpg"">`n<script type=""application/ld+json"">$ld</script>"
-  WriteFile "books\$($b.id).html" (Layout "$($b.english) ($($b.language))" "$($b.tagline) $($b.pages) pages, in $($b.language)." "/books/$($b.id)" 'books' $body $extra)
+    offers = @{ '@type' = 'Offer'; price = "$($b.price).00"; priceCurrency = 'USD'; availability = 'https://schema.org/InStock'; url = "$site/books/$($b.id)" }
+  } | ConvertTo-Json -Compress -Depth 5
+  $extra = "<script type=""application/ld+json"">$ld</script>"
+  WriteFile "books\$($b.id).html" (Layout "$($b.english) ($($b.language))" "$($b.tagline) $($b.pages) pages, in $($b.language). $(Money $b.price)." "/books/$($b.id)" 'books' $body $extra "$site/assets/books/$($b.img)-cover.jpg")
 }
 
 # ---------- About ----------
@@ -371,7 +453,7 @@ $contactBody = @"
     <div class="two-col">
       <div class="panel">
         <h2>Write to us</h2>
-        <p>Questions about a book, bulk orders for care homes or libraries, or a request for a new language? We'd love to hear from you.</p>
+        <p>Questions about a book or an order, bulk orders for care homes or libraries, or a request for a new language? We'd love to hear from you.</p>
         <p style="font-size:1.2rem"><a href="mailto:$email">$email</a></p>
         <a class="btn btn-primary" href="mailto:$email?subject=Question%20about%20EasyEye%20Puzzles">Send an email</a>
       </div>
@@ -384,7 +466,7 @@ $contactBody = @"
   </div>
 </section>
 "@
-WriteFile 'contact.html' (Layout 'Contact' 'Contact EasyEye Puzzles about our large print puzzle books, bulk orders, or to request a new language.' '/contact' 'contact' $contactBody)
+WriteFile 'contact.html' (Layout 'Contact' 'Contact EasyEye Puzzles about our large print puzzle books, orders, bulk orders, or to request a new language.' '/contact' 'contact' $contactBody)
 
 # ---------- Privacy ----------
 $privacyBody = @"
@@ -393,9 +475,9 @@ $privacyBody = @"
     <h1>Privacy policy</h1>
     <p>This website does not use advertising or tracking cookies and does not ask you to create an account.</p>
     <h2>Preferences</h2>
-    <p>If you change the text size or turn on high contrast, that choice is saved only in your own browser (local storage) so the site remembers it on your next visit. It is never sent to us.</p>
-    <h2>Purchases</h2>
-    <p>Books are sold through Amazon. When you click <strong>Buy on Amazon</strong> you leave this website, and Amazon's own privacy policy applies.</p>
+    <p>If you change the text size or turn on night mode, that choice is saved only in your own browser (local storage) so the site remembers it on your next visit. It is never sent to us.</p>
+    <h2>Orders</h2>
+    <p>When you place an order, we use the details you give us (such as your name, email and shipping address) only to process and deliver your order and to answer your questions. Payments are handled by our payment provider, and we never see or store your card details.</p>
     <h2>Fonts and hosting</h2>
     <p>The site is hosted on Cloudflare and uses Google Fonts to display the Atkinson Hyperlegible typeface. These providers may process technical data such as your IP address to deliver the pages.</p>
     <h2>Contact</h2>
@@ -416,11 +498,10 @@ $nfBody = @"
 WriteFile '404.html' (Layout 'Page not found' 'Page not found.' '/404' '' $nfBody)
 
 # ---------- Sitemap & robots ----------
-$urls = @('/', '/books', '/about', '/contact', '/privacy') + ($books | ForEach-Object { "/books/$($_.id)" })
+$urls = @('/', '/books', '/bundles', '/about', '/contact', '/privacy') + ($books | ForEach-Object { "/books/$($_.id)" })
 $today = (Get-Date).ToString('yyyy-MM-dd')
 $sm = "<?xml version=""1.0"" encoding=""UTF-8""?>`n<urlset xmlns=""http://www.sitemaps.org/schemas/sitemap/0.9"">`n" + (($urls | ForEach-Object { "  <url><loc>$site$_</loc><lastmod>$today</lastmod></url>" }) -join "`n") + "`n</urlset>`n"
 WriteFile 'sitemap.xml' $sm
 WriteFile 'robots.txt' "User-agent: *`nAllow: /`n`nSitemap: $site/sitemap.xml`n"
-WriteFile 'favicon.svg' ($logo.Trim().Replace(' class="logo-mark"', ' xmlns="http://www.w3.org/2000/svg"').Replace(' aria-hidden="true"', ''))
 
-"Built $($books.Count) book pages into $pub"
+"Built $($books.Count) book pages and $($bundles.Count) bundles into $pub"

@@ -2,6 +2,7 @@
   {
     "id": "parole-intrecciate-anziani-ipovedenti",
     "img": "parole-ipovedenti",
+    "price": 49,
     "title": "Parole Intrecciate per Anziani e Ipovedenti",
     "english": "Large Print Word Search for Seniors & Low Vision",
     "language": "Italian",
@@ -26,6 +27,7 @@
   {
     "id": "parole-intrecciate-anziani-adulti",
     "img": "parole-adulti",
+    "price": 19,
     "title": "Parole Intrecciate per Anziani e Adulti",
     "english": "Italian Word Search for Seniors & Adults",
     "language": "Italian",
@@ -49,6 +51,7 @@
   {
     "id": "giochi-di-memoria-per-anziani",
     "img": "memoria-anziani",
+    "price": 29,
     "title": "Giochi di Memoria per Anziani",
     "english": "Memory Games for Seniors",
     "language": "Italian",
@@ -73,6 +76,7 @@
   {
     "id": "giochi-di-memoria-anziani-intelligenti",
     "img": "memoria-intelligenti",
+    "price": 36,
     "title": "Giochi di Memoria per Anziani Intelligenti",
     "english": "Memory Games for Smart Seniors",
     "language": "Italian",
@@ -97,6 +101,7 @@
   {
     "id": "viaggio-per-italia-esercizi-variati",
     "img": "quatro-attivita",
+    "price": 29,
     "title": "Viaggio per l'Italia: Edizione Esercizi Variati",
     "english": "A Journey Through Italy: Mixed Puzzles Edition",
     "language": "Italian",
@@ -121,6 +126,7 @@
   {
     "id": "viaggio-per-italia-libro-attivita",
     "img": "viaggio-italia",
+    "price": 36,
     "title": "Viaggio per l'Italia: Libro di Attività",
     "english": "A Journey Through Italy: Activity Book",
     "language": "Italian",
@@ -145,6 +151,7 @@
   {
     "id": "cruciverba-per-anziani-e-adulti",
     "img": "cruciverba-adulti",
+    "price": 27,
     "title": "Cruciverba per Anziani e Adulti",
     "english": "Italian Crosswords for Seniors & Adults",
     "language": "Italian",
@@ -168,6 +175,7 @@
   {
     "id": "cruciverba-per-nonni",
     "img": "cruciverba-nonni",
+    "price": 9,
     "title": "Cruciverba per Nonni",
     "english": "Crosswords for Grandparents",
     "language": "Italian",
@@ -191,6 +199,7 @@
   {
     "id": "mots-croises-seniors-malvoyants",
     "img": "mots-croises",
+    "price": 45,
     "title": "Mots Croisés pour Seniors et Malvoyants",
     "english": "Large Print French Crosswords for Seniors & Low Vision",
     "language": "French",
@@ -215,6 +224,7 @@
   {
     "id": "mots-meles-seniors-malvoyants",
     "img": "mots-meles-seniors",
+    "price": 49,
     "title": "Mots Mêlés pour Seniors et Malvoyants",
     "english": "Large Print French Word Search for Seniors & Low Vision",
     "language": "French",
@@ -239,6 +249,7 @@
   {
     "id": "mots-meles-malvoyants",
     "img": "mots-meles-malvoyants",
+    "price": 45,
     "title": "Mots Mêlés Malvoyants",
     "english": "Large Print French Word Search for Low Vision",
     "language": "French",

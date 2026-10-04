@@ -3,15 +3,15 @@
 
   function save(key, value) { try { localStorage.setItem(key, value); } catch (e) {} }
 
-  // Text size and contrast controls
+  // Text size and night mode controls
   function syncA11y() {
     var size = root.getAttribute('data-size') || 'm';
-    var contrast = root.getAttribute('data-contrast') === 'high';
+    var night = root.getAttribute('data-theme') === 'night';
     document.querySelectorAll('[data-set-size]').forEach(function (b) {
       b.setAttribute('aria-pressed', String(b.getAttribute('data-set-size') === size));
     });
-    document.querySelectorAll('[data-toggle-contrast]').forEach(function (b) {
-      b.setAttribute('aria-pressed', String(contrast));
+    document.querySelectorAll('[data-toggle-night]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(night));
     });
   }
   document.querySelectorAll('[data-set-size]').forEach(function (b) {
@@ -22,11 +22,11 @@
       syncA11y();
     });
   });
-  document.querySelectorAll('[data-toggle-contrast]').forEach(function (b) {
+  document.querySelectorAll('[data-toggle-night]').forEach(function (b) {
     b.addEventListener('click', function () {
-      var on = root.getAttribute('data-contrast') !== 'high';
-      if (on) root.setAttribute('data-contrast', 'high'); else root.removeAttribute('data-contrast');
-      save('eep-contrast', on ? 'high' : 'normal');
+      var on = root.getAttribute('data-theme') !== 'night';
+      if (on) root.setAttribute('data-theme', 'night'); else root.removeAttribute('data-theme');
+      save('eep-theme', on ? 'night' : 'day');
       syncA11y();
     });
   });

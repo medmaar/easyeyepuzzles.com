@@ -1,0 +1,65 @@
+[
+  {
+    "id": "french-word-search-duo",
+    "name": "French Word Search Duo",
+    "price": 75,
+    "tagline": "Both of our large print French word search books, together.",
+    "books": ["mots-meles-seniors-malvoyants", "mots-meles-malvoyants"]
+  },
+  {
+    "id": "complete-french-collection",
+    "name": "Complete French Collection",
+    "price": 99,
+    "tagline": "Every French book we publish: two word search books and one crossword book.",
+    "books": ["mots-meles-seniors-malvoyants", "mots-meles-malvoyants", "mots-croises-seniors-malvoyants"]
+  },
+  {
+    "id": "italian-brain-games-4-pack",
+    "name": "Italian Brain Games 4-Pack",
+    "price": 105,
+    "tagline": "Memory games and varied activity books for a full brain workout in Italian.",
+    "books": ["giochi-di-memoria-per-anziani", "giochi-di-memoria-anziani-intelligenti", "viaggio-per-italia-esercizi-variati", "viaggio-per-italia-libro-attivita"]
+  },
+  {
+    "id": "italian-bestsellers-4-pack",
+    "name": "Italian Bestsellers 4-Pack",
+    "price": 120,
+    "tagline": "Our most popular Italian books: large print word search, memory games, travel activities and crosswords.",
+    "books": ["parole-intrecciate-anziani-ipovedenti", "giochi-di-memoria-anziani-intelligenti", "viaggio-per-italia-libro-attivita", "cruciverba-per-anziani-e-adulti"]
+  },
+  {
+    "id": "italian-mind-gym-5-pack",
+    "name": "Italian Mind Gym 5-Pack",
+    "price": 135,
+    "tagline": "The Brain Games 4-Pack plus our large print low vision word search book.",
+    "books": ["giochi-di-memoria-per-anziani", "giochi-di-memoria-anziani-intelligenti", "viaggio-per-italia-esercizi-variati", "viaggio-per-italia-libro-attivita", "parole-intrecciate-anziani-ipovedenti"]
+  },
+  {
+    "id": "low-vision-collection",
+    "name": "Large Print Low Vision Collection",
+    "price": 140,
+    "tagline": "All four of our extra-large, high-contrast books for readers with low vision (Italian and French).",
+    "books": ["parole-intrecciate-anziani-ipovedenti", "mots-meles-seniors-malvoyants", "mots-meles-malvoyants", "mots-croises-seniors-malvoyants"]
+  },
+  {
+    "id": "complete-italian-collection",
+    "name": "Complete Italian Collection",
+    "price": 175,
+    "tagline": "All 8 Italian books: word searches, crosswords, memory games and activity books.",
+    "books": ["parole-intrecciate-anziani-ipovedenti", "parole-intrecciate-anziani-adulti", "giochi-di-memoria-per-anziani", "giochi-di-memoria-anziani-intelligenti", "viaggio-per-italia-esercizi-variati", "viaggio-per-italia-libro-attivita", "cruciverba-per-anziani-e-adulti", "cruciverba-per-nonni"]
+  },
+  {
+    "id": "best-of-italy-and-france-6-pack",
+    "name": "Best of Italy & France 6-Pack",
+    "price": 180,
+    "tagline": "Our three bestselling Italian books with the complete French collection, for bilingual households.",
+    "books": ["parole-intrecciate-anziani-ipovedenti", "giochi-di-memoria-anziani-intelligenti", "viaggio-per-italia-libro-attivita", "mots-meles-seniors-malvoyants", "mots-meles-malvoyants", "mots-croises-seniors-malvoyants"]
+  },
+  {
+    "id": "complete-collection",
+    "name": "The Complete Collection",
+    "price": 225,
+    "tagline": "Every EasyEye Puzzles book: all 11 Italian and French titles at our biggest discount.",
+    "books": ["parole-intrecciate-anziani-ipovedenti", "parole-intrecciate-anziani-adulti", "giochi-di-memoria-per-anziani", "giochi-di-memoria-anziani-intelligenti", "viaggio-per-italia-esercizi-variati", "viaggio-per-italia-libro-attivita", "cruciverba-per-anziani-e-adulti", "cruciverba-per-nonni", "mots-croises-seniors-malvoyants", "mots-meles-seniors-malvoyants", "mots-meles-malvoyants"]
+  }
+]
