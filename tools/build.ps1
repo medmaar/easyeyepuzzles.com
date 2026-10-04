@@ -6,7 +6,7 @@ $ErrorActionPreference = 'Stop'
 $repo = Split-Path -Parent $PSScriptRoot
 $pub = Join-Path $repo 'public'
 $site = 'https://easyeyepuzzles.com'
-$email = 'hello@easyeyepuzzles.com'
+$email = 'help@easyeyepuzzles.com'
 $year = (Get-Date).Year
 $ver = (Get-Date).ToString('yyyyMMddHHmm')   # cache-busting for css/js
 $utf8 = New-Object System.Text.UTF8Encoding($false)
@@ -125,6 +125,7 @@ $body
         <ul>
           <li><a href="/about">About us</a></li>
           <li><a href="/contact">Contact</a></li>
+          <li>Sales &amp; help: <a href="mailto:$email">$email</a></li>
           <li><a href="/privacy">Privacy</a></li>
         </ul>
       </div>
@@ -452,7 +453,7 @@ $contactBody = @"
     <h1>Contact us</h1>
     <div class="two-col">
       <div class="panel">
-        <h2>Write to us</h2>
+        <h2>Sales &amp; help</h2>
         <p>Questions about a book or an order, bulk orders for care homes or libraries, or a request for a new language? We'd love to hear from you.</p>
         <p style="font-size:1.2rem"><a href="mailto:$email">$email</a></p>
         <a class="btn btn-primary" href="mailto:$email?subject=Question%20about%20EasyEye%20Puzzles">Send an email</a>
